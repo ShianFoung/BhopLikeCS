@@ -1,11 +1,33 @@
-#include <Windows.h>
+#define _CRT_SECURE_NO_WARNINGS
 
 #include "Engine.h"
 
+#include <Windows.h>
+#include <iostream>
 
-int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
+#pragma warning(push)
+#pragma warning(disable : 6031; disable : 28251)
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
-	Engine engine;
+#ifdef _DEBUG
+	// 開Console並重導基本輸入輸出
+	AllocConsole();
+	freopen("CONOUT$", "w", stdout);
+	freopen("CONOUT$", "w", stderr);
+	freopen("CONIN$", "r", stdin);
+#endif
 
-	return engine.Run();
+	// 強制讓Engine在關閉視窗時直接呼叫解構子
+	{
+		Engine engine(1280, 720, false);
+		engine.Run();
+	}
+
+	// 卡住Console讓他不關閉，以便檢視訊息
+	std::cin.get();
+
+	return 0;
 }
+
+#pragma warning(pop)
