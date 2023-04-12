@@ -25,8 +25,8 @@ void Player::UpdateMouseInput(double dx, double dy)
     float yaw = this->_camera.GetYaw();
     float pitch = this->_camera.GetPitch();
 
-    yaw += dx;
-    pitch += dy;
+    yaw += dx * 0.1;
+    pitch += dy * 0.1;
 
     if (yaw > 180.0f)
         yaw -= 360.0f;
@@ -35,15 +35,15 @@ void Player::UpdateMouseInput(double dx, double dy)
         yaw += 360.0f;
 
     if (pitch > 89.0f)
-        pitch -= 89.0f;
+        pitch = 89.0f;
 
     if (pitch < -89.0f)
-        pitch += 89.0f;
+        pitch = -89.0f;
 
 
     float yawRadians = glm::radians(yaw);
     float pitchRadians = glm::radians(pitch);
-    glm::vec3 direction;
+    glm::vec3 direction {};
 
     direction.x = cos(pitchRadians) * cos(yawRadians);
     direction.y = sin(pitchRadians);

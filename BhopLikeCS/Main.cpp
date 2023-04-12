@@ -24,8 +24,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		engine.Run();
 	}
 
+#ifdef _DEBUG
 	// 卡住Console讓他不關閉，以便檢視訊息
 	std::cin.get();
+#endif
 
 	return 0;
 }

@@ -40,7 +40,7 @@ private:
     float _far;
 
     float _sensitivity = 1.0f;
-    float _yaw = 0.0f;
+    float _yaw = -90.0f;
     float _pitch = 0.0f;
     bool _firstclick = true;
 
