@@ -54,26 +54,9 @@ void Shader::Use()
     glUseProgram(this->_programID);
 }
 
-void Shader::SetUniform(const float* model, const float* view, const float* projection)
-{
-    if (model)
-        glUniformMatrix4fv(this->_modelLocation, 1, GL_FALSE, model);
-
-    if (view)
-        glUniformMatrix4fv(this->_viewLocation, 1, GL_FALSE, view);
-
-    if (projection)
-        glUniformMatrix4fv(this->_projectionLocation, 1, GL_FALSE, projection);
-}
-
-void Shader::SetTemp(const float* value)
-{
-    glUniformMatrix4fv(glGetUniformLocation(this->_programID, "camera"), 1, GL_FALSE, value);
-}
-
 GLuint Shader::_loadShader(const char* fileName, GLenum shaderType)
 {
-    // 先讀取 .vert 與 .frag 檔案的內容
+    // 先讀取 .vert 或 .frag 檔案的內容
     std::ifstream fileIn(fileName);
     std::stringstream buffer;
 

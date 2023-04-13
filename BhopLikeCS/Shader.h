@@ -14,11 +14,8 @@ public:
     ~Shader();
 
     void Use();
-    void SetUniform(const float* model, const float* view, const float* projection);
-    void SetTemp(const float* value);
+    void UnUse();
 private:
-    GLuint _loadShader(const char* fileName, GLenum shaderType);
-
     GLuint _vertID;
     GLuint _fragID;
     GLuint _programID;
@@ -26,4 +23,6 @@ private:
     GLint _modelLocation;
     GLint _viewLocation;
     GLint _projectionLocation;
+
+    GLuint _loadShader(const char* fileName, GLenum shaderType);
 };

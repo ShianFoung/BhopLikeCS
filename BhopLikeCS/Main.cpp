@@ -1,6 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 
-#include "Engine.h"
+#include "Game.h"
 
 #include <Windows.h>
 #include <iostream>
@@ -18,13 +18,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	freopen("CONIN$", "r", stdin);
 #endif
 
-	// 強制讓Engine在關閉視窗時直接呼叫解構子
-	{
-		Engine engine(1280, 720, false);
-		engine.Run();
-	}
+	Game game(1280, 720, false);
+	game.Run();
 
 #ifdef _DEBUG
+	std::cout << "Press Enter key to exit..." << std::endl;
 	// 卡住Console讓他不關閉，以便檢視訊息
 	std::cin.get();
 #endif
