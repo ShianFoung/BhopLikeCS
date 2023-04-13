@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GLHeader.h"
+#include "GameHeader.h"
 
 #include <iostream>
 #include <fstream>
@@ -14,15 +14,13 @@ public:
     ~Shader();
 
     void Use();
-    void UnUse();
+    void SetCameraUniform(const float* value);
 private:
     GLuint _vertID;
     GLuint _fragID;
     GLuint _programID;
 
-    GLint _modelLocation;
-    GLint _viewLocation;
-    GLint _projectionLocation;
+    GLint _cameraMatrixLocation;
 
     GLuint _loadShader(const char* fileName, GLenum shaderType);
 };

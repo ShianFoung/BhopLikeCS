@@ -35,9 +35,7 @@ Shader::Shader(const char* name)
         return;
     }
 
-    /*this->_modelLocation = glGetUniformLocation(this->_programID, "model");
-    this->_viewLocation = glGetUniformLocation(this->_programID, "view");
-    this->_projectionLocation = glGetUniformLocation(this->_programID, "projection");*/
+    this->_cameraMatrixLocation = glGetUniformLocation(this->_programID, "cameraMatrix");
 }
 
 Shader::~Shader()
@@ -52,6 +50,11 @@ Shader::~Shader()
 void Shader::Use()
 {
     glUseProgram(this->_programID);
+}
+
+void Shader::SetCameraUniform(const float* value)
+{
+    glUniformMatrix4fv(this->_cameraMatrixLocation, 1, GL_FALSE, value);
 }
 
 GLuint Shader::_loadShader(const char* fileName, GLenum shaderType)

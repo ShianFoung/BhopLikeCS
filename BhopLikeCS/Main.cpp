@@ -22,8 +22,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	game.Run();
 
 #ifdef _DEBUG
-	std::cout << "Press Enter key to exit..." << std::endl;
 	// 卡住Console讓他不關閉，以便檢視訊息
+	std::cout << "Press Enter key to exit..." << std::endl;
 	std::cin.get();
 #endif
 

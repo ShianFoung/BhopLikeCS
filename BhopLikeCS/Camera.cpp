@@ -7,7 +7,7 @@ Camera::Camera(float fov, float aspectRatio, float near, float far)
     this->_cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
     this->_positionOffset = glm::vec3(0.0f, 0.0f, 0.0f);
     this->_viewMatrix = glm::lookAt(this->_cameraPosition + this->_positionOffset, this->_cameraPosition + this->_positionOffset + this->_cameraDirection, this->_cameraUp);
-    this->_projectionMatrix = glm::perspective(fov, aspectRatio, near, far);
+    this->_projectionMatrix = glm::perspective(glm::radians(fov), aspectRatio, near, far);
     this->_yaw = -90.0f;
     this->_pitch = 0.0f;
 }
