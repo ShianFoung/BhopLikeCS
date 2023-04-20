@@ -1,7 +1,7 @@
 #include "Player.h"
 
 Player::Player()
-	: _camera(90.0f, g_aspectRatio)
+	: _camera(75.0f, g_aspectRatio)
 {
 	this->_position = glm::vec3(0.0f, 0.0f, 0.0f);
 	this->_velocity = glm::vec3(0.0f, 0.0f, 0.0f);

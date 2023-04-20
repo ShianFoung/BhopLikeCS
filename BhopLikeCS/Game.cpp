@@ -31,26 +31,26 @@ void Game::Run()
 {
     this->_player = new Player();
 
-    //GLfloat vertices[] =
-    //{
-    //    -0.5f, 0.0f,  0.5f,
-    //    -0.5f, 0.0f, -0.5f,
-    //     0.5f, 0.0f, -0.5f,
-    //     0.5f, 0.0f,  0.5f,
-    //     0.0f, 0.8f,  0.0f,
-    //};
-
-    //GLuint indices[] =
-    //{
-    //    0, 1, 2,
-    //    0, 2, 3,
-    //    /*0, 1, 4,
-    //    1, 2, 4,
-    //    2, 3, 4,
-    //    3, 0, 4*/
-    //};
-
     GLfloat vertices[] =
+    {
+        -0.5f, 0.0f,  0.5f,
+        -0.5f, 0.0f, -0.5f,
+         0.5f, 0.0f, -0.5f,
+         0.5f, 0.0f,  0.5f,
+         0.0f, 0.8f,  0.0f,
+    };
+
+    GLuint indices[] =
+    {
+        0, 1, 2,
+        0, 2, 3,
+        0, 1, 4,
+        1, 2, 4,
+        2, 3, 4,
+        3, 0, 4
+    };
+
+    /*GLfloat vertices[] =
     {
         -1000.0f, 0.0f,  1000.0f,
         -1000.0f, 0.0f, -1000.0f,
@@ -62,7 +62,7 @@ void Game::Run()
     {
         0, 1, 2,
         0, 2, 3
-    };
+    };*/
 
     GLuint vao, vbo, ebo;
 
@@ -188,6 +188,6 @@ void Game::_onCursorEvent(GLFWwindow* window, float xPos, float yPos)
     float dx = xPos - this->_windowCenterX;
     float dy = this->_windowCenterY - yPos;
 
-    //this->_player->MouseInput(dx, dy);
-    //glfwSetCursorPos(window, this->_windowCenterX, this->_windowCenterY);
+    this->_player->MouseInput(dx, dy);
+    glfwSetCursorPos(window, this->_windowCenterX, this->_windowCenterY);
 }

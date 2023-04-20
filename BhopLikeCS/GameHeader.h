@@ -8,4 +8,6 @@
 
 #endif
 
+#include <glm/glm.hpp>
+
 extern float g_aspectRatio;
