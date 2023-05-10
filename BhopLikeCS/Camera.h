@@ -6,13 +6,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/vector_angle.hpp>
 
-enum CameraDirection
-{
-    POSITIVE_X,
-    NEGATIVE_X,
-    POSITIVE_Z,
-    NEGATIVE_Z
-};
+#include <iostream>
+#include <glm/gtx/string_cast.hpp>
 
 class Camera
 {
@@ -20,75 +15,18 @@ public:
     Camera(float fov, float aspectRatio, float near = 0.1f, float far = 1000.0f);
     ~Camera();
 
-    glm::vec3 GetCameraPosition() { return this->_cameraPosition; }
-    glm::mat4 GetViewProjectionMatrix()
-    {
-        this->_updateCameraDirection();
-        this->_viewMatrix = glm::lookAt(this->_cameraPosition + this->_positionOffset, this->_cameraPosition + this->_positionOffset + this->_cameraDirection, this->_cameraUp);
-        return this->_projectionMatrix * this->_viewMatrix;
-    }
+    glm::mat4& GetProjectionMatrix();
+    glm::mat4& GetOrthogonalMatrix();
 
-    void SetCameraPosition(glm::vec3& position) { this->_cameraPosition = position; }
-    void SetCameraDirection(CameraDirection direction)
-    {
-        switch (direction)
-        {
-            case POSITIVE_X:
-                this->_cameraDirection = glm::vec3(1.0f, 0.0f, 0.0f);
-                this->_yaw = 0.0f;
-                break;
-            case NEGATIVE_X:
-                this->_cameraDirection = glm::vec3(-1.0f, 0.0f, 0.0f);
-                this->_yaw = 180.0f;
-                break;
-            case POSITIVE_Z:
-                this->_cameraDirection = glm::vec3(0.0f, 0.0f, -1.0f);
-                this->_yaw = -90.0f;
-                break;
-            case NEGATIVE_Z:
-                this->_cameraDirection = glm::vec3(0.0f, 0.0f, 1.0f);
-                this->_yaw = 90.0f;
-                break;
-        }
+    void SetCameraPosition(glm::vec3& position);
+    void SetCameraPositionOffset(glm::vec3& offset);
+    void SetCameraAngles(float yaw, float pitch);
 
-        this->_pitch = 0.0f;
-    }
-    void SetCameraPositionOffset(glm::vec3& offset) { this->_positionOffset = offset; }
-    void SetYaw(float yaw)
-    {
-        this->_yaw = yaw;
-        this->_normalizeYaw();
-    }
-    void SetPitch(float pitch)
-    {
-        this->_pitch = pitch;
-        this->_normalizePitch();
-    }
-    void SetYawPitch(float yaw, float pitch)
-    {
-        this->SetYaw(yaw);
-        this->SetPitch(pitch);
-    }
-
-    void AddYaw(float yaw)
-    {
-        this->_yaw += yaw;
-        this->_normalizeYaw();
-    }
-    void AddPitch(float pitch)
-    {
-        this->_pitch += pitch;
-        this->_normalizePitch();
-    }
-    void AddYawPitch(float yaw, float pitch)
-    {
-        this->AddYaw(yaw);
-        this->AddPitch(pitch);
-    }
+    void AddCameraAngles(float yaw, float pitch);
 
     void Temp(GLFWwindow* window)
     {
-        float speed = 0.01f;
+        float speed = 1.0f;
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
             this->_cameraPosition += speed * this->_cameraDirection;
@@ -107,19 +45,22 @@ public:
 
         if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
             this->_cameraPosition -= speed * this->_cameraUp;
+
+        this->_updateProjectionMatrix();
     }
 private:
+    float _yaw;
+    float _pitch;
     glm::vec3 _cameraPosition;
     glm::vec3 _cameraDirection;
     glm::vec3 _cameraUp;
-    glm::vec3 _positionOffset;
-    glm::mat4 _viewMatrix;
+    glm::vec3 _cameraPositionOffset;
+    glm::mat4 _modelViewMatrix;
     glm::mat4 _projectionMatrix;
-    float _yaw;
-    float _pitch;
+    glm::mat4 _perspectiveMatrix;
+    glm::mat4 _orthogonalMatrix;
 
-    void _normalizeYaw();
-    void _normalizePitch();
     void _updateCameraDirection();
+    void _updateProjectionMatrix();
 };
 

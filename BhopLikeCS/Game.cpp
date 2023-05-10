@@ -1,27 +1,16 @@
 #include "Game.h"
 
-Game* g_GameInstance = nullptr;
-float g_aspectRatio = 0.0f;
-
 Game::Game(int windowWidth, int windowHeight, bool isFullScrean)
 {
-    g_GameInstance = this;
-
     this->_windowWidth = windowWidth;
     this->_windowHeight = windowHeight;
     this->_isFullScrean = isFullScrean;
-    this->_windowCenterX = this->_windowWidth / 2;
-    this->_windowCenterY = this->_windowHeight / 2;
-
-    g_aspectRatio = (float) this->_windowWidth / this->_windowHeight;
 
     this->_createGLWindow();
-    this->_initInputEvents();
 }
 
 Game::~Game()
 {
-    g_GameInstance = nullptr;
     this->_window = nullptr;
     delete this->_player;
     this->_player = nullptr;
@@ -29,9 +18,9 @@ Game::~Game()
 
 void Game::Run()
 {
-    this->_player = new Player();
+    this->_player = new Player(75.0f, this->_windowWidth, this->_windowHeight);
 
-    GLfloat vertices[] =
+    /*GLfloat vertices[] =
     {
         -0.5f, 0.0f,  0.5f,
         -0.5f, 0.0f, -0.5f,
@@ -48,21 +37,21 @@ void Game::Run()
         1, 2, 4,
         2, 3, 4,
         3, 0, 4
-    };
+    };*/
 
-    /*GLfloat vertices[] =
+    GLfloat vertices[] =
     {
-        -1000.0f, 0.0f,  1000.0f,
-        -1000.0f, 0.0f, -1000.0f,
-         1000.0f, 0.0f, -1000.0f,
-         1000.0f, 0.0f,  1000.0f
+        -100.0f,  100.0f, 0.0f,
+        -100.0f, -100.0f, 0.0f,
+         200.0f, -100.0f, 0.0f,
+         200.0f,  100.0f, 0.0f
     };
 
     GLuint indices[] =
     {
         0, 1, 2,
         0, 2, 3
-    };*/
+    };
 
     GLuint vao, vbo, ebo;
 
@@ -84,7 +73,9 @@ void Game::Run()
 
     Shader shader = Shader("default");
 
-    //glEnable(GL_DEPTH_TEST);
+    glfwSetInputMode(this->_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+
+    glEnable(GL_DEPTH_TEST);
 
     while (!glfwWindowShouldClose(this->_window))
     {
@@ -93,8 +84,9 @@ void Game::Run()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         this->_player->Temp(this->_window);
+        this->_player->HandleInputs(this->_window);
 
-        glm::mat4 viewProjectionMatrix = this->_player->GetViewProjectionMatrix();
+        glm::mat4 viewProjectionMatrix = this->_player->GetCamera().GetProjectionMatrix();
 
         // TODO
         shader.Use();
@@ -116,16 +108,6 @@ void Game::_StaticOpenGLErrorCallback(int error, const char* description)
     std::cerr << "OpenGL Error: " << error << "(" << description << ")" << std::endl;
 }
 
-void Game::_StaticOnKeyEvent(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    g_GameInstance->_onKeyEvent(window, key, action);
-}
-
-void Game::_StaticOnCursorEvent(GLFWwindow* window, double xPos, double yPos)
-{
-    g_GameInstance->_onCursorEvent(window, xPos, yPos);
-}
-
 // ===================================== Private =====================================
 
 void Game::_createGLWindow()
@@ -139,16 +121,12 @@ void Game::_createGLWindow()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWmonitor* monitor = nullptr;
+    // 關閉調整視窗的功能
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-    if (this->_isFullScrean)
-    {
-        monitor = glfwGetPrimaryMonitor();
+    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 
-        glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
-    }
-
-    this->_window = glfwCreateWindow(this->_windowWidth, this->_windowHeight, "Bhop Like CS", monitor, NULL);
+    this->_window = glfwCreateWindow(this->_windowWidth, this->_windowHeight, "Bhop Like CS", this->_isFullScrean ? monitor : NULL, NULL);
 
     if (!this->_window)
     {
@@ -156,7 +134,21 @@ void Game::_createGLWindow()
         glfwTerminate();
     }
 
+    // 如果不是全螢幕就設定視窗為置中
+    if (!this->_isFullScrean)
+    {
+        const GLFWvidmode* vidMode = glfwGetVideoMode(monitor);
+        int initWindowXPos = (vidMode->width - this->_windowWidth) / 2;
+        int initWindowYPos = (vidMode->height - this->_windowHeight) / 2;
+
+        glfwSetWindowPos(this->_window, initWindowXPos, initWindowYPos);
+    }
+
+    // 將視窗的執行緒設定成當前執行緒
     glfwMakeContextCurrent(this->_window);
+
+    // 關閉垂直同步 (不然輸入延遲會很高)
+    glfwSwapInterval(0);
 
     // 如果有支援滑鼠原始輸入，就開啟
     if (glfwRawMouseMotionSupported())
@@ -166,28 +158,7 @@ void Game::_createGLWindow()
     glewInit();
 }
 
-void Game::_initInputEvents()
-{
-    glfwSetKeyCallback(this->_window, Game::_StaticOnKeyEvent);
-    glfwSetCursorPosCallback(this->_window, Game::_StaticOnCursorEvent);
-}
-
 void Game::_render()
 {
 
-}
-
-void Game::_onKeyEvent(GLFWwindow* window, int key, int action)
-{
-    //this->_player->UpdateKeyInput(key, action);
-    //this->_player->Temp(window);
-}
-
-void Game::_onCursorEvent(GLFWwindow* window, float xPos, float yPos)
-{
-    float dx = xPos - this->_windowCenterX;
-    float dy = this->_windowCenterY - yPos;
-
-    this->_player->MouseInput(dx, dy);
-    glfwSetCursorPos(window, this->_windowCenterX, this->_windowCenterY);
 }

@@ -6,6 +6,12 @@
 
 #include <glm/glm.hpp>
 
+#define KEY_HANDLE(window, key, buttons, buttonType) \
+	if (glfwGetKey(window, key) == GLFW_PRESS) \
+		buttons |= buttonType; \
+	else \
+		buttons &= ~buttonType;
+
 enum PlayerButtons : int
 {
     FRONT = (1 << 0),
@@ -21,13 +27,12 @@ enum PlayerButtons : int
 class Player
 {
 public:
-	Player();
+	Player(float fov, float windowWidth, float windowHeight);
 	~Player();
 
-	glm::mat4 GetViewProjectionMatrix() { return this->_camera.GetViewProjectionMatrix(); }
+	Camera& GetCamera();
 
-	void KeyInput(int key, int action);
-	void MouseInput(float dx, float dy);
+	void HandleInputs(GLFWwindow* window);
 	void CreateMove();
 	void Update();
 
@@ -39,9 +44,19 @@ private:
 	Camera _camera;
 	glm::vec3 _position;
 	glm::vec3 _velocity;
+	float _windowWidth;
+	float _windowHeight;
+	float _windowCenterX;
+	float _windowCenterY;
 
-	float _sensitivity = 1.0f;
+	bool _isNoclip = true;
+	bool _isFirstMove = true;
+	float _sensitivity = 3.0f;
+	int _lastButtons = 0;
 	int _buttons = 0;
+
+	void _keyInput(GLFWwindow* window);
+	void _mouseInput(GLFWwindow* window);
 };
 
 //

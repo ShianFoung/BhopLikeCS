@@ -4,6 +4,9 @@
 
 #include <Windows.h>
 #include <iostream>
+#include <glm/glm.hpp>
+
+#pragma comment(lib, "imm32.lib")
 
 #pragma warning(push)
 #pragma warning(disable : 6031; disable : 28251)
@@ -11,13 +14,22 @@
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
 #ifdef _DEBUG
-	// 開Console並重導基本輸入輸出
+	// 開 Console 並重導基本輸入輸出
+	// 由於有 #define _CRT_SECURE_NO_WARNINGS 的關係讓 freopen 不會報錯
+	// 不然正常來講要用 freopen_s 才行 (安全性問題)
 	AllocConsole();
 	freopen("CONOUT$", "w", stdout);
 	freopen("CONOUT$", "w", stderr);
 	freopen("CONIN$", "r", stdin);
-#endif
 
+	// 將 Console 左上角的位置設定到螢幕的 (10, 10) 位置
+	HWND consoleWnd = GetConsoleWindow();
+	SetWindowPos(consoleWnd, HWND_TOP, 10, 10, 0, 0, SWP_NOSIZE);
+#endif
+	// 打開遊戲視窗前先將 Microsoft 的輸入法強制停用
+	ImmDisableIME(GetCurrentThreadId());
+	
+	// 啟動遊戲
 	Game game(1280, 720, false);
 	game.Run();
 

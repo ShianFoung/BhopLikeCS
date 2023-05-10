@@ -7,7 +7,3 @@
 #include <glfw/glfw3.h>
 
 #endif
-
-#include <glm/glm.hpp>
-
-extern float g_aspectRatio;

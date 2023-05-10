@@ -1,56 +1,76 @@
 #include "Player.h"
 
-Player::Player()
-	: _camera(75.0f, g_aspectRatio)
+Player::Player(float fov, float windowWidth, float windowHeight)
+	: _camera(fov, windowWidth / windowHeight)
 {
 	this->_position = glm::vec3(0.0f, 0.0f, 0.0f);
 	this->_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
-}
-Player::~Player()
-{
+	this->_windowWidth = windowWidth;
+	this->_windowHeight = windowHeight;
+	this->_windowCenterX = this->_windowWidth / 2.0f;
+	this->_windowCenterY = this->_windowHeight / 2.0f;
 
+	glm::vec3 cameraOffset = glm::vec3(0.0f, 0.0f, 64.0f);
+
+	this->_camera.SetCameraPositionOffset(cameraOffset);
+}
+Player::~Player() {  }
+
+Camera& Player::GetCamera() { return this->_camera; }
+
+void Player::HandleInputs(GLFWwindow* window)
+{
+	this->_keyInput(window);
+	this->_mouseInput(window);
 }
 
-void Player::KeyInput(int key, int action)
+// ===================================== Private =====================================
+
+void Player::_keyInput(GLFWwindow* window)
 {
-	if (action == GLFW_PRESS)
+	this->_lastButtons = this->_buttons;
+
+	// 不要問我為什麼用那麼簡短的巨集
+	// 因為要打一堆一樣的東西 太懶了 = =
+	KEY_HANDLE(window, GLFW_KEY_W, this->_buttons, PlayerButtons::FRONT);
+	KEY_HANDLE(window, GLFW_KEY_S, this->_buttons, PlayerButtons::BACK);
+	KEY_HANDLE(window, GLFW_KEY_A, this->_buttons, PlayerButtons::LEFT);
+	KEY_HANDLE(window, GLFW_KEY_D, this->_buttons, PlayerButtons::RIGHT);
+	KEY_HANDLE(window, GLFW_KEY_LEFT_SHIFT, this->_buttons, PlayerButtons::DUCK);
+	KEY_HANDLE(window, GLFW_KEY_SPACE, this->_buttons, PlayerButtons::JUMP);
+}
+
+void Player::_mouseInput(GLFWwindow* window)
+{
+	// 第一次滑鼠移動事件直接忽略並置中滑鼠
+	if (this->_isFirstMove)
 	{
-		if (key == GLFW_KEY_W)
-			this->_buttons |= PlayerButtons::FRONT;
-		if (key == GLFW_KEY_S)
-			this->_buttons |= PlayerButtons::BACK;
-		if (key == GLFW_KEY_A)
-			this->_buttons |= PlayerButtons::LEFT;
-		if (key == GLFW_KEY_D)
-			this->_buttons |= PlayerButtons::RIGHT;
-		if (key == GLFW_KEY_LEFT_SHIFT)
-			this->_buttons |= PlayerButtons::DUCK;
-		if (key == GLFW_KEY_SPACE)
-			this->_buttons |= PlayerButtons::JUMP;
-	}
-	else if (action == GLFW_RELEASE)
-	{
-		if (key == GLFW_KEY_W)
-			this->_buttons &= ~PlayerButtons::FRONT;
-		if (key == GLFW_KEY_S)
-			this->_buttons &= ~PlayerButtons::BACK;
-		if (key == GLFW_KEY_A)
-			this->_buttons &= ~PlayerButtons::LEFT;
-		if (key == GLFW_KEY_D)
-			this->_buttons &= ~PlayerButtons::RIGHT;
-		if (key == GLFW_KEY_LEFT_SHIFT)
-			this->_buttons &= ~PlayerButtons::DUCK;
-		if (key == GLFW_KEY_SPACE)
-			this->_buttons &= ~PlayerButtons::JUMP;
-	}
-}
+		this->_isFirstMove = false;
 
-void Player::MouseInput(float dx, float dy)
-{
-	float yaw = dx * 0.022 * this->_sensitivity;
-	float pitch = dy * 0.022 * this->_sensitivity;
+		glfwSetCursorPos(window, this->_windowCenterX, this->_windowCenterY);
 
-	this->_camera.AddYawPitch(dx, dy);
+		return;
+	}
+
+	// 獲取當前滑鼠的座標
+	double xPos, yPos;
+	glfwGetCursorPos(window, &xPos, &yPos);
+
+	// 計算滑鼠與中心點的位移量
+	// 因為視窗的座標是左上角為 (0, 0)
+	// 所以計算 Y 軸時要反過來
+	float deltaX = static_cast<float>(xPos) - this->_windowCenterX;
+	float deltaY = this->_windowCenterY - static_cast<float>(yPos);
+
+	// 如果不乘以這個 0.022f 的話移動量會很巨大
+	// 所以就直接拿 CS 中的 m_yaw 跟 m_pitch 來用了 (數值都為 0.022f)
+	float yaw = deltaX * 0.022f * this->_sensitivity;
+	float pitch = deltaY * 0.022f * this->_sensitivity;
+
+	this->_camera.AddCameraAngles(yaw, pitch);
+
+	// 記得把滑鼠重新歸位至中間
+	glfwSetCursorPos(window, this->_windowCenterX, this->_windowCenterY);
 }
 
 //
