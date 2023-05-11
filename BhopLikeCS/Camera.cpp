@@ -83,7 +83,7 @@ void Camera::_updateCameraDirection()
     glm::vec3 newDirection = {  };
 
     newDirection.x = cos(radiansPitch) * cos(radiansYaw);
-    newDirection.y = -cos(radiansPitch) * sin(radiansYaw);
+    newDirection.y = cos(radiansPitch) * sin(radiansYaw);
     newDirection.z = sin(radiansPitch);
 
     this->_cameraDirection = glm::normalize(newDirection);

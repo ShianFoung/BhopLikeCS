@@ -17,7 +17,7 @@ public:
     Game(int windowWidth, int windowHeight, bool isFullScrean = false);
     ~Game();
 
-    void Run();
+    void Run(int tickrate);
 private:
     int _windowWidth;
     int _windowHeight;

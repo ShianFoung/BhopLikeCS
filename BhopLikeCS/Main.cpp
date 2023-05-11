@@ -31,7 +31,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	
 	// 啟動遊戲
 	Game game(1280, 720, false);
-	game.Run();
+	// 設定遊戲 fps 與 tickrate 為 128
+	// 如果 fps 與 tickrate 不同的話，設計上會困難很多... (我不會做畫面平滑)
+	// 所以就簡單的設定成一樣的數值，方便製作 ㄏㄏ
+	game.Run(128);
 
 #ifdef _DEBUG
 	// 卡住Console讓他不關閉，以便檢視訊息

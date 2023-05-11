@@ -16,7 +16,7 @@ Game::~Game()
     this->_player = nullptr;
 }
 
-void Game::Run()
+void Game::Run(int tickrate)
 {
     this->_player = new Player(75.0f, this->_windowWidth, this->_windowHeight);
 
@@ -75,10 +75,26 @@ void Game::Run()
 
     glfwSetInputMode(this->_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
+    // 開啟深度測試，這樣才能讓物體有遠近之分
+    // 不然最後畫的東西會在畫面最前面
     glEnable(GL_DEPTH_TEST);
+
+    double tickPerSeconds = 1.0 / tickrate;
+    double currentTime;
+    double lastTime = glfwGetTime();
+    float deltaTime;
 
     while (!glfwWindowShouldClose(this->_window))
     {
+        // 限制 fps 與 tickrate 的地方
+        currentTime = glfwGetTime();
+        deltaTime = static_cast<float>(currentTime - lastTime);
+
+        if (deltaTime < tickPerSeconds)
+            continue;
+
+        lastTime = currentTime;
+
         // 先行做事件偵測，後再繪製
         glfwPollEvents();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -114,6 +130,7 @@ void Game::_createGLWindow()
 {
     glfwSetErrorCallback(Game::_StaticOpenGLErrorCallback);
 
+    // 初始化 GLFW
     glfwInit();
 
     // 設定OpenGL版本，這邊指定OpenGL 4.6
@@ -154,6 +171,7 @@ void Game::_createGLWindow()
     if (glfwRawMouseMotionSupported())
         glfwSetInputMode(this->_window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 
+    // 初始化 GLEW
     glewExperimental = GL_TRUE;
     glewInit();
 }

@@ -59,7 +59,8 @@ void Player::_mouseInput(GLFWwindow* window)
 	// 計算滑鼠與中心點的位移量
 	// 因為視窗的座標是左上角為 (0, 0)
 	// 所以計算 Y 軸時要反過來
-	float deltaX = static_cast<float>(xPos) - this->_windowCenterX;
+	// X 軸則因為左轉對於數學來說應為正值，所以也須反過來算
+	float deltaX = this->_windowCenterX - static_cast<float>(xPos);
 	float deltaY = this->_windowCenterY - static_cast<float>(yPos);
 
 	// 如果不乘以這個 0.022f 的話移動量會很巨大
@@ -67,6 +68,7 @@ void Player::_mouseInput(GLFWwindow* window)
 	float yaw = deltaX * 0.022f * this->_sensitivity;
 	float pitch = deltaY * 0.022f * this->_sensitivity;
 
+	// 更新角度變化量
 	this->_camera.AddCameraAngles(yaw, pitch);
 
 	// 記得把滑鼠重新歸位至中間
