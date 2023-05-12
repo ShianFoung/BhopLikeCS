@@ -21,11 +21,9 @@ Shader::Shader(const char* name)
     if (!isLinked)
     {
         GLint logLength;
-
         glGetShaderiv(this->_programID, GL_INFO_LOG_LENGTH, &logLength);
 
         std::vector<GLchar> logMessage = std::vector<GLchar>(logLength);
-
         glGetShaderInfoLog(this->_programID, logLength, &logLength, logMessage.data());
 
         std::cerr << logMessage.data() << std::endl;
@@ -62,7 +60,6 @@ GLuint Shader::_loadShader(const char* fileName, GLenum shaderType)
     // 先讀取 .vert 或 .frag 檔案的內容
     std::ifstream fileIn(fileName);
     std::stringstream buffer;
-
     buffer << fileIn.rdbuf();
 
     const std::string bufferString = buffer.str();
@@ -80,11 +77,9 @@ GLuint Shader::_loadShader(const char* fileName, GLenum shaderType)
     if (!isSuccess)
     {
         GLint logLength;
-
         glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &logLength);
 
         std::vector<GLchar> logMessage = std::vector<GLchar>(logLength);
-
         glGetShaderInfoLog(shaderID, logLength, &logLength, logMessage.data());
 
         std::cerr << logMessage.data() << std::endl;

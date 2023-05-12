@@ -4,6 +4,7 @@
 
 #include "Camera.h"
 #include "Player.h"
+#include "Physics.h"
 #include "Shader.h"
 
 #include <glm/glm.hpp>
@@ -24,7 +25,6 @@ private:
     bool _isFullScrean;
 
     GLFWwindow* _window;
-    Player* _player;
 
     static void _StaticOpenGLErrorCallback(int error, const char* description);
 

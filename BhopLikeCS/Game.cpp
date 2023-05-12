@@ -12,13 +12,12 @@ Game::Game(int windowWidth, int windowHeight, bool isFullScrean)
 Game::~Game()
 {
     this->_window = nullptr;
-    delete this->_player;
-    this->_player = nullptr;
 }
 
 void Game::Run(int tickrate)
 {
-    this->_player = new Player(75.0f, this->_windowWidth, this->_windowHeight);
+    Player player = Player(75.0f, this->_windowWidth, this->_windowHeight);
+    Physics physics = Physics(&player);
 
     /*GLfloat vertices[] =
     {
@@ -43,8 +42,8 @@ void Game::Run(int tickrate)
     {
         -100.0f,  100.0f, 0.0f,
         -100.0f, -100.0f, 0.0f,
-         200.0f, -100.0f, 0.0f,
-         200.0f,  100.0f, 0.0f
+         500.0f, -100.0f, 0.0f,
+         500.0f,  100.0f, 0.0f
     };
 
     GLuint indices[] =
@@ -99,10 +98,17 @@ void Game::Run(int tickrate)
         glfwPollEvents();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        this->_player->Temp(this->_window);
-        this->_player->HandleInputs(this->_window);
+        // 處理順序:
+        // 1. 獲取 player 的滑鼠與鍵盤輸入
+        // 2. 將 player 丟入 physics 做物理計算 (碰撞、加速度等等)
+        // 3. 將 physics 做完的計算再傳給 player 做最後的更新 (位置等等)
 
-        glm::mat4 viewProjectionMatrix = this->_player->GetCamera().GetProjectionMatrix();
+        player.Temp(this->_window);
+        player.HandleInputs(this->_window);
+
+        physics.Update(deltaTime);
+
+        glm::mat4 viewProjectionMatrix = player.GetCamera().GetProjectionMatrix();
 
         // TODO
         shader.Use();
