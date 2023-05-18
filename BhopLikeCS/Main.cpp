@@ -1,12 +1,16 @@
 #define _CRT_SECURE_NO_WARNINGS
 
-#include "Game.h"
-
 #include <Windows.h>
-#include <iostream>
-#include <glm/glm.hpp>
 
-#pragma comment(lib, "imm32.lib")
+#include "Header.h"
+
+#define STB_IMAGE_STATIC
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_TRUETYPE_IMPLEMENTATION
+#include <stb/stb_image.h>
+#include <stb/stb_truetype.h>
+
+#include "Game.h"
 
 #pragma warning(push)
 #pragma warning(disable : 6031; disable : 28251)
@@ -30,7 +34,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ImmDisableIME(GetCurrentThreadId());
 	
 	// 啟動遊戲
-	Game game(1280, 720, false);
+	// 如果設定成全螢幕執行的話，設定的長寬高將會忽略，直接使用主螢幕的長寬
+	Game game("Bhop Like CS", 1280, 720, false);
 	// 設定遊戲 fps 與 tickrate 為 128
 	// 如果 fps 與 tickrate 不同的話，設計上會困難很多... (我不會做畫面平滑)
 	// 所以就簡單的設定成一樣的數值，方便製作 ㄏㄏ

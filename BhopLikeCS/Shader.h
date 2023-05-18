@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GameHeader.h"
+#include "Header.h"
 
 #include <iostream>
 #include <fstream>

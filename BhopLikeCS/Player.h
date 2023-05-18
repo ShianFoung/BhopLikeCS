@@ -1,16 +1,16 @@
 #pragma once
 
-#include "GameHeader.h"
+#include "Header.h"
 
 #include "Camera.h"
-
-#include <glm/glm.hpp>
 
 #define KEY_HANDLE(window, key, buttons, buttonType) \
 	if (glfwGetKey(window, key) == GLFW_PRESS) \
 		buttons |= buttonType; \
 	else \
 		buttons &= ~buttonType;
+
+static float cl_yawspeed = 210.0f;
 
 enum PlayerButtons : int
 {
@@ -30,29 +30,30 @@ public:
 	Player(float fov, float windowWidth, float windowHeight);
 	~Player();
 
+	glm::vec3& GetPosition();
 	glm::vec3& GetVelocity();
+	glm::vec3& GetViewAngles();
 	Camera& GetCamera();
+	int GetButtons();
 
+	void SetPosition(glm::vec3& newPosition);
 	void SetVelocity(glm::vec3& newVelocity);
 
 	bool IsNoclip();
+	bool IsPressedKey(int buttons);
 
-	void HandleInputs(GLFWwindow* window);
+	void ClearVelocity();
+
+	void HandleInputs(GLFWwindow* window, float deltaTime);
 	void CreateMove();
-	void Update(float deltaTime);
-
-	void Temp(GLFWwindow* window)
-	{
-		this->_camera.Temp(window);
-	}
+	void Update();
 private:
 	Camera _camera;
 	glm::vec3 _lastPosition;
 	glm::vec3 _position;
-	glm::vec3 _lastVelocity;
 	glm::vec3 _velocity;
-	glm::vec2 _lastViewAngles;
-	glm::vec2 _viewAngles;
+	glm::vec3 _lastViewAngles;
+	glm::vec3 _viewAngles;
 	float _windowWidth;
 	float _windowHeight;
 	float _windowCenterX;
@@ -64,8 +65,8 @@ private:
 	int _lastButtons = 0;
 	int _buttons = 0;
 
-	void _mouseInput(GLFWwindow* window);
 	void _keyInput(GLFWwindow* window);
+	void _mouseInput(GLFWwindow* window, float deltaTime);
 };
 
 ////    const glm::vec3 _normalBBox = glm::vec3(32.0f, 72.0f, 32.0f);

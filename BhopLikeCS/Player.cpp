@@ -3,8 +3,11 @@
 Player::Player(float fov, float windowWidth, float windowHeight)
 	: _camera(fov, windowWidth / windowHeight)
 {
+	this->_lastPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 	this->_position = glm::vec3(0.0f, 0.0f, 0.0f);
 	this->_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+	this->_viewAngles = glm::vec3(0.0f, 0.0f, 0.0f);
+	this->_lastViewAngles = glm::vec3(0.0f, 0.0f, 0.0f);
 	this->_windowWidth = windowWidth;
 	this->_windowHeight = windowHeight;
 	this->_windowCenterX = this->_windowWidth / 2.0f;
@@ -12,38 +15,70 @@ Player::Player(float fov, float windowWidth, float windowHeight)
 
 	glm::vec3 cameraOffset = glm::vec3(0.0f, 0.0f, 64.0f);
 
-	this->_camera.SetCameraPositionOffset(cameraOffset);
+	this->_camera.SetPositionOffset(cameraOffset);
 }
 Player::~Player() {  }
 
+glm::vec3& Player::GetPosition() { return this->_position; }
+
 glm::vec3& Player::GetVelocity() { return this->_velocity; }
 
+glm::vec3& Player::GetViewAngles() { return this->_viewAngles; }
+
 Camera& Player::GetCamera() { return this->_camera; }
+
+int Player::GetButtons() { return this->_buttons; }
+
+void Player::SetPosition(glm::vec3& newPosition)
+{
+	this->_lastPosition = this->_position;
+	this->_position = newPosition;
+}
 
 void Player::SetVelocity(glm::vec3& newVelocity) { this->_velocity = newVelocity; }
 
 bool Player::IsNoclip() { return this->_isNoclip; }
 
-void Player::HandleInputs(GLFWwindow* window)
+bool Player::IsPressedKey(int buttons) { return this->_buttons & buttons; }
+
+void Player::ClearVelocity() { this->_velocity = glm::vec3(0.0f); }
+
+void Player::HandleInputs(GLFWwindow* window, float deltaTime)
 {
-	this->_mouseInput(window);
 	this->_keyInput(window);
+	this->_mouseInput(window, deltaTime);
 }
 
-void Player::Update(float deltaTime)
+void Player::Update()
 {
-
+	if (this->_lastPosition != this->_position)
+		this->_camera.SetPosition(this->_position);
 }
 
 // ===================================== Private =====================================
 
-void Player::_mouseInput(GLFWwindow* window)
+void Player::_keyInput(GLFWwindow* window)
+{
+	this->_lastButtons = this->_buttons;
+
+	// 不要問我為什麼用那麼簡短的巨集
+	// 因為要打一堆一樣的東西 太懶了 = =
+	KEY_HANDLE(window, GLFW_KEY_W, this->_buttons, FRONT);
+	KEY_HANDLE(window, GLFW_KEY_S, this->_buttons, BACK);
+	KEY_HANDLE(window, GLFW_KEY_A, this->_buttons, LEFT);
+	KEY_HANDLE(window, GLFW_KEY_D, this->_buttons, RIGHT);
+	KEY_HANDLE(window, GLFW_KEY_LEFT_SHIFT, this->_buttons, DUCK);
+	KEY_HANDLE(window, GLFW_KEY_SPACE, this->_buttons, JUMP);
+	KEY_HANDLE(window, GLFW_KEY_Q, this->_buttons, YAWLEFT);
+	KEY_HANDLE(window, GLFW_KEY_E, this->_buttons, YAWRIGHT);
+}
+
+void Player::_mouseInput(GLFWwindow* window, float deltaTime)
 {
 	// 第一次滑鼠移動事件直接忽略並置中滑鼠
 	if (this->_isFirstMove)
 	{
 		this->_isFirstMove = false;
-
 		glfwSetCursorPos(window, this->_windowCenterX, this->_windowCenterY);
 
 		return;
@@ -65,23 +100,21 @@ void Player::_mouseInput(GLFWwindow* window)
 	float yaw = deltaX * 0.022f * this->_sensitivity;
 	float pitch = deltaY * 0.022f * this->_sensitivity;
 
+	// 檢查如果有使用 CS 中的 +left 或 +right 時
+	bool doYawLeft = this->IsPressedKey(YAWLEFT);
+	bool doYawRight = this->IsPressedKey(YAWRIGHT);
+
+	if (doYawLeft != doYawRight)
+	{
+		if (doYawLeft)
+			yaw += cl_yawspeed * deltaTime;
+		if (doYawRight)
+			yaw -= cl_yawspeed * deltaTime;
+	}
+
 	// 更新角度變化量
-	this->_camera.AddCameraAngles(yaw, pitch);
+	this->_camera.AddEulerAngles(yaw, pitch);
 
 	// 記得把滑鼠重新歸位至中間
 	glfwSetCursorPos(window, this->_windowCenterX, this->_windowCenterY);
-}
-
-void Player::_keyInput(GLFWwindow* window)
-{
-	this->_lastButtons = this->_buttons;
-
-	// 不要問我為什麼用那麼簡短的巨集
-	// 因為要打一堆一樣的東西 太懶了 = =
-	KEY_HANDLE(window, GLFW_KEY_W, this->_buttons, PlayerButtons::FRONT);
-	KEY_HANDLE(window, GLFW_KEY_S, this->_buttons, PlayerButtons::BACK);
-	KEY_HANDLE(window, GLFW_KEY_A, this->_buttons, PlayerButtons::LEFT);
-	KEY_HANDLE(window, GLFW_KEY_D, this->_buttons, PlayerButtons::RIGHT);
-	KEY_HANDLE(window, GLFW_KEY_LEFT_SHIFT, this->_buttons, PlayerButtons::DUCK);
-	KEY_HANDLE(window, GLFW_KEY_SPACE, this->_buttons, PlayerButtons::JUMP);
 }

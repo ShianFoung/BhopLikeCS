@@ -1,30 +1,24 @@
 #pragma once
 
-#include "GameHeader.h"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/vector_angle.hpp>
-
-#include <iostream>
-#include <glm/gtx/string_cast.hpp>
+#include "Header.h"
 
 class Camera
 {
 public:
-    Camera(float fov, float aspectRatio, float near = 0.1f, float far = 1000.0f);
+    Camera(float fov, float aspectRatio, float near = 7.0f, float far = 28400.0f);
     ~Camera();
 
     glm::mat4& GetProjectionMatrix();
-    glm::mat4& GetOrthogonalMatrix();
+    void GetViewSpaceVectors(glm::vec3* front, glm::vec3* right, glm::vec3* up);
+    void GetCameraAngles(float* yaw, float* pitch);
 
-    void SetCameraPosition(glm::vec3& position);
-    void SetCameraPositionOffset(glm::vec3& offset);
-    void SetCameraAngles(float yaw, float pitch);
+    void SetPosition(glm::vec3& position);
+    void SetPositionOffset(glm::vec3& offset);
+    void SetEulerAngles(float yaw, float pitch);
 
-    void AddCameraAngles(float yaw, float pitch);
+    void AddEulerAngles(float yaw, float pitch);
 
-    void Temp(GLFWwindow* window)
+    /*void Temp(GLFWwindow* window)
     {
         float speed = 1.0f;
 
@@ -47,20 +41,21 @@ public:
             this->_cameraPosition -= speed * this->_cameraUp;
 
         this->_updateProjectionMatrix();
-    }
+    }*/
 private:
     float _yaw;
     float _pitch;
-    glm::vec3 _cameraPosition;
-    glm::vec3 _cameraDirection;
-    glm::vec3 _cameraUp;
-    glm::vec3 _cameraPositionOffset;
+    glm::vec3 _position;
+    glm::vec3 _direction;
+    glm::vec3 _right;
+    glm::vec3 _up;
+    glm::vec3 _worldUp;
+    glm::vec3 _positionOffset;
     glm::mat4 _modelViewMatrix;
     glm::mat4 _projectionMatrix;
     glm::mat4 _perspectiveMatrix;
-    glm::mat4 _orthogonalMatrix;
 
-    void _updateCameraDirection();
+    void _updateCameraVectors();
     void _updateProjectionMatrix();
 };
 

@@ -9,6 +9,8 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Debug-Benchmark|x64 = Debug-Benchmark|x64
+		Debug-Benchmark|x86 = Debug-Benchmark|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
@@ -17,6 +19,10 @@ Global
 		{63DA251D-3C7C-4377-9B65-1C89C6986F8C}.Debug|x64.Build.0 = Debug|x64
 		{63DA251D-3C7C-4377-9B65-1C89C6986F8C}.Debug|x86.ActiveCfg = Debug|Win32
 		{63DA251D-3C7C-4377-9B65-1C89C6986F8C}.Debug|x86.Build.0 = Debug|Win32
+		{63DA251D-3C7C-4377-9B65-1C89C6986F8C}.Debug-Benchmark|x64.ActiveCfg = Debug-Benchmark|x64
+		{63DA251D-3C7C-4377-9B65-1C89C6986F8C}.Debug-Benchmark|x64.Build.0 = Debug-Benchmark|x64
+		{63DA251D-3C7C-4377-9B65-1C89C6986F8C}.Debug-Benchmark|x86.ActiveCfg = Debug|Win32
+		{63DA251D-3C7C-4377-9B65-1C89C6986F8C}.Debug-Benchmark|x86.Build.0 = Debug|Win32
 		{63DA251D-3C7C-4377-9B65-1C89C6986F8C}.Release|x64.ActiveCfg = Release|x64
 		{63DA251D-3C7C-4377-9B65-1C89C6986F8C}.Release|x64.Build.0 = Release|x64
 		{63DA251D-3C7C-4377-9B65-1C89C6986F8C}.Release|x86.ActiveCfg = Release|Win32

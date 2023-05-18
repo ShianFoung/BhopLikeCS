@@ -1,7 +1,8 @@
 #include "Game.h"
 
-Game::Game(int windowWidth, int windowHeight, bool isFullScrean)
+Game::Game(const char* title, const int windowWidth, const int windowHeight, bool isFullScrean)
 {
+    this->_title = title;
     this->_windowWidth = windowWidth;
     this->_windowHeight = windowHeight;
     this->_isFullScrean = isFullScrean;
@@ -16,7 +17,7 @@ Game::~Game()
 
 void Game::Run(int tickrate)
 {
-    Player player = Player(75.0f, this->_windowWidth, this->_windowHeight);
+    Player player = Player(90.0f, this->_windowWidth, this->_windowHeight);
     Physics physics = Physics(&player);
 
     /*GLfloat vertices[] =
@@ -42,8 +43,8 @@ void Game::Run(int tickrate)
     {
         -100.0f,  100.0f, 0.0f,
         -100.0f, -100.0f, 0.0f,
-         500.0f, -100.0f, 0.0f,
-         500.0f,  100.0f, 0.0f
+         1000.0f, -100.0f, 0.0f,
+         1000.0f,  100.0f, 0.0f
     };
 
     GLuint indices[] =
@@ -72,7 +73,7 @@ void Game::Run(int tickrate)
 
     Shader shader = Shader("default");
 
-    glfwSetInputMode(this->_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    //glfwSetInputMode(this->_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
     // 開啟深度測試，這樣才能讓物體有遠近之分
     // 不然最後畫的東西會在畫面最前面
@@ -94,19 +95,21 @@ void Game::Run(int tickrate)
 
         lastTime = currentTime;
 
+#ifdef _BENCHMARK
+        double processStartTime = glfwGetTime();
+#endif
+
         // 先行做事件偵測，後再繪製
         glfwPollEvents();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // 處理順序:
         // 1. 獲取 player 的滑鼠與鍵盤輸入
-        // 2. 將 player 丟入 physics 做物理計算 (碰撞、加速度等等)
+        // 2. physics 做物理計算 (碰撞、加速度等等)
         // 3. 將 physics 做完的計算再傳給 player 做最後的更新 (位置等等)
-
-        player.Temp(this->_window);
-        player.HandleInputs(this->_window);
-
+        player.HandleInputs(this->_window, deltaTime);
         physics.Update(deltaTime);
+        player.Update();
 
         glm::mat4 viewProjectionMatrix = player.GetCamera().GetProjectionMatrix();
 
@@ -118,6 +121,11 @@ void Game::Run(int tickrate)
         glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(this->_window);
+
+#ifdef _BENCHMARK
+        double processTime = glfwGetTime() - processStartTime;
+        std::cout << processTime << '\r';
+#endif
     }
 
     glfwDestroyWindow(this->_window);
@@ -148,8 +156,18 @@ void Game::_createGLWindow()
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
     GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode* vidMode = glfwGetVideoMode(monitor);
+    const int primaryMonitorWidth = vidMode->width;
+    const int primaryMonitorHeight = vidMode->height;
 
-    this->_window = glfwCreateWindow(this->_windowWidth, this->_windowHeight, "Bhop Like CS", this->_isFullScrean ? monitor : NULL, NULL);
+    if (this->_isFullScrean)
+    {
+        this->_window = glfwCreateWindow(primaryMonitorWidth, primaryMonitorHeight, this->_title, monitor, NULL);
+        this->_windowWidth = primaryMonitorWidth;
+        this->_windowHeight = primaryMonitorHeight;
+    }
+    else
+        this->_window = glfwCreateWindow(this->_windowWidth, this->_windowHeight, this->_title, NULL, NULL);
 
     if (!this->_window)
     {
@@ -160,9 +178,8 @@ void Game::_createGLWindow()
     // 如果不是全螢幕就設定視窗為置中
     if (!this->_isFullScrean)
     {
-        const GLFWvidmode* vidMode = glfwGetVideoMode(monitor);
-        int initWindowXPos = (vidMode->width - this->_windowWidth) / 2;
-        int initWindowYPos = (vidMode->height - this->_windowHeight) / 2;
+        int initWindowXPos = (primaryMonitorWidth - this->_windowWidth) / 2;
+        int initWindowYPos = (primaryMonitorHeight - this->_windowHeight) / 2;
 
         glfwSetWindowPos(this->_window, initWindowXPos, initWindowYPos);
     }
