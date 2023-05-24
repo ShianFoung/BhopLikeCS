@@ -1,23 +1,24 @@
-//#pragma once
-//
-//#include <nlohmann/json.hpp>
-//
-//#include <fstream>
-//
-//using json = nlohmann::json;
-//
-//class Config
-//{
-//public:
-//	static Config* GetInstance();
-//private:
-//	static Config* _Instance;
-//
-//	static json* _GetDefaultConfig();
-//
-//	json* _json;
-//
-//	Config();
-//
-//	bool _readConfig();
-//};
+#pragma once
+
+class Config
+{
+public:
+    static Config& GetInstance();
+
+    Config(const Config& config) = delete;
+    Config& operator=(const Config& config) = delete;
+
+    void Initialization();
+    json& Data();
+    bool Save();
+private:
+    const char* FILE_NAME = "config.json";
+
+    static json staticGetDefaultConfig();
+private:
+    bool isInitialized = false;
+    json jsonData;
+
+    Config();
+    ~Config();
+};

@@ -36,6 +36,9 @@
     <ClCompile Include="Physics.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="Header.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -57,12 +60,6 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="Config.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="Includes\stb\stb_image.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
-    <ClInclude Include="Includes\stb\stb_truetype.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

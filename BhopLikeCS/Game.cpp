@@ -1,3 +1,6 @@
+
+#include "Header.h"
+
 #include "Game.h"
 
 Game::Game(const char* title, const int windowWidth, const int windowHeight, bool isFullScrean)
@@ -73,7 +76,7 @@ void Game::Run(int tickrate)
 
     Shader shader = Shader("default");
 
-    //glfwSetInputMode(this->_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    glfwSetInputMode(this->_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
     // 開啟深度測試，這樣才能讓物體有遠近之分
     // 不然最後畫的東西會在畫面最前面

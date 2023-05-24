@@ -1,0 +1,10 @@
+{
+    "gameSettings": {
+        "tickrateAndFps": 128
+    },
+    "windowSettings": {
+        "fullscreen": false,
+        "height": 720,
+        "width": 1280
+    }
+}

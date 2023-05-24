@@ -1,3 +1,6 @@
+
+#include "Header.h"
+
 #include "Camera.h"
 
 Camera::Camera(float fov, float aspectRatio, float near, float far)

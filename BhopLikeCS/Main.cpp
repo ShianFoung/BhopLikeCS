@@ -1,19 +1,13 @@
-#define _CRT_SECURE_NO_WARNINGS
-
-#include <Windows.h>
-
 #include "Header.h"
 
-#define STB_IMAGE_STATIC
-#define STB_IMAGE_IMPLEMENTATION
-#define STB_TRUETYPE_IMPLEMENTATION
-#include <stb/stb_image.h>
-#include <stb/stb_truetype.h>
+#include <Windows.h>
 
 #include "Game.h"
 
 #pragma warning(push)
 #pragma warning(disable : 6031; disable : 28251)
+
+void LoadConfig();
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
@@ -32,6 +26,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 #endif
 	// 打開遊戲視窗前先將 Microsoft 的輸入法強制停用
 	ImmDisableIME(GetCurrentThreadId());
+
+	// 讀取設定檔
+	LoadConfig();
 	
 	// 啟動遊戲
 	// 如果設定成全螢幕執行的話，設定的長寬高將會忽略，直接使用主螢幕的長寬
@@ -48,6 +45,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 #endif
 
 	return 0;
+}
+
+void LoadConfig()
+{
+	Config* config = &Config::GetInstance();
+	config->Initialization();
+
+	g_WindowWidth = config->Data()["windowSettings"];
 }
 
 #pragma warning(pop)
