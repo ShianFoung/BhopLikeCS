@@ -4,8 +4,8 @@
 
 Shader::Shader(const char* name)
 {
-    const std::string vertPath = "Shaders/" + std::string(name) + ".vert";
-    const std::string fragPath = "Shaders/" + std::string(name) + ".frag";
+    const std::string vertPath = "Assets/Shaders/" + std::string(name) + ".vert";
+    const std::string fragPath = "Assets/Shaders/" + std::string(name) + ".frag";
 
     this->_vertID = this->_loadShader(vertPath.c_str(), GL_VERTEX_SHADER);
     this->_fragID = this->_loadShader(fragPath.c_str(), GL_FRAGMENT_SHADER);

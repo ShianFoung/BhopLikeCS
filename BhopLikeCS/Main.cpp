@@ -4,21 +4,21 @@
 
 #include "Game.h"
 
-#pragma warning(push)
-#pragma warning(disable : 6031; disable : 28251)
-
 void LoadConfig();
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
+// 程式進入點
+// 通常應該是 int main 才對，但因為我專案的輸出是 Windows 而不是 Console，
+// 所以要使用 WinMain 當作進入點，不然會報錯。
+int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
 #ifdef _DEBUG
 	// 開 Console 並重導基本輸入輸出
-	// 由於有 #define _CRT_SECURE_NO_WARNINGS 的關係讓 freopen 不會報錯
-	// 不然正常來講要用 freopen_s 才行 (安全性問題)
 	AllocConsole();
-	freopen("CONOUT$", "w", stdout);
-	freopen("CONOUT$", "w", stderr);
-	freopen("CONIN$", "r", stdin);
+
+	FILE* stream;
+	freopen_s(&stream, "CONOUT$", "w", stdout);
+	freopen_s(&stream, "CONOUT$", "w", stderr);
+	freopen_s(&stream, "CONIN$", "r", stdin);
 
 	// 將 Console 左上角的位置設定到螢幕的 (10, 10) 位置
 	HWND consoleWnd = GetConsoleWindow();
@@ -32,10 +32,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	
 	// 啟動遊戲
 	// 如果設定成全螢幕執行的話，設定的長寬高將會忽略，直接使用主螢幕的長寬
-	Game game("Bhop Like CS", 1280, 720, false);
+	Game game("Bhop Like CS", g_WindowWidth, g_WindowHeight, g_WindowFullscrean);
 	// 設定遊戲 fps 與 tickrate 為 128
 	// 如果 fps 與 tickrate 不同的話，設計上會困難很多... (我不會做畫面平滑)
-	// 所以就簡單的設定成一樣的數值，方便製作 ㄏㄏ
+	// 所以就簡單的設定成一樣的數值，方便於製作
 	game.Run(128);
 
 #ifdef _DEBUG
@@ -52,7 +52,13 @@ void LoadConfig()
 	Config* config = &Config::GetInstance();
 	config->Initialization();
 
-	g_WindowWidth = config->Data()["windowSettings"];
+	json windowSettings = config->Data()["windowSettings"];
+	g_WindowWidth = windowSettings["width"];
+	g_WindowHeight = windowSettings["height"];
+	g_WindowFullscrean = windowSettings["fullscreen"];
+	g_ResolutionAspectRatio = 1.0f * g_WindowWidth * g_WindowHeight;
+	g_WindowHalfWidth = g_WindowWidth / 2;
+	g_WindowHalfWidthFloat = static_cast<float>(g_WindowHalfWidth);
+	g_WindowHalfHeight = g_WindowHeight / 2;
+	g_WindowHalfHeightFloat = static_cast<float>(g_WindowHalfHeight);
 }
-
-#pragma warning(pop)

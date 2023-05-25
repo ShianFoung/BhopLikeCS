@@ -64,9 +64,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Shaders\default.vert" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Shaders\default.frag" />
+    <Text Include="Assets\Shaders\default.vert" />
+    <Text Include="Assets\Shaders\default.frag" />
   </ItemGroup>
 </Project>

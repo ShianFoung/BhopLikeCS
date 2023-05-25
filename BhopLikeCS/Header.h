@@ -1,6 +1,20 @@
 #pragma once
 
-#define _CRT_SECURE_NO_WARNINGS
+// ============================================
+//                 全域標頭檔
+// ============================================
+// 需要這個東西的原因是要大幅度的降低
+// 整體的編譯時間，不然包含的函式庫超級多，
+// 每次要編譯時花費的時間真的太久了。
+// 這邊同時也包含了全域變數跟一些實用的功能，
+// 其實原本是想要用 Utils 去包這些功能，
+// 結果最後想一想還是算了，有點懶再去分開了 ㄏㄏ。
+// ============================================
+
+#define STB_IMAGE_STATIC
+#define STBTT_STATIC
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_TRUETYPE_IMPLEMENTATION
 
 // OpenGL 函式庫，而且要優先導入 glew，不然會報錯
 #include <glew/glew.h>
@@ -24,10 +38,6 @@
 using json = nlohmann::json;
 
 // STB 函式庫
-#define STB_IMAGE_STATIC
-#define STBTT_STATIC
-#define STB_IMAGE_IMPLEMENTATION
-#define STB_TRUETYPE_IMPLEMENTATION
 #include <stb/stb_image.h>
 #include <stb/stb_truetype.h>
 
@@ -42,19 +52,40 @@ using json = nlohmann::json;
 static int g_WindowWidth;
 // 視窗高度 (等同遊戲解析度的高)
 static int g_WindowHeight;
+// 視窗是否全螢幕
+static bool g_WindowFullscrean;
 // 解析度的比值 (寬除以高)
 static float g_ResolutionAspectRatio;
 // 視窗寬度的一半
 static int g_WindowHalfWidth;
+// 視窗寬度的一半 (浮點數)
+static float g_WindowHalfWidthFloat;
 // 視窗高度的一半
 static int g_WindowHalfHeight;
+// 視窗高度的一半 (浮點數)
+static float g_WindowHalfHeightFloat;
 
 // ============================================
 //                   功能函式
 // ============================================
 
-// 取向量中每個分量的絕對值
+// 取得向量中每個分量的絕對值
 inline glm::vec3 AbsValues(const glm::vec3& vector)
 {
     return glm::vec3(abs(vector.x), abs(vector.y), abs(vector.z));
+}
+
+// 取得水平方向的移動速度
+inline float GetXYVelocity(const glm::vec3& velocity)
+{
+    return sqrt(velocity.x * velocity.x +
+                velocity.y * velocity.y);
+}
+
+// 取得三維空間的移動速度
+inline float GetXYZVelocity(const glm::vec3& velocity)
+{
+    return sqrt(velocity.x * velocity.x +
+                velocity.y * velocity.y +
+                velocity.z * velocity.z);
 }

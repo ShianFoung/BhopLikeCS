@@ -153,6 +153,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;imm32.lib;%(ProjectDir)Libs\glew32.lib;%(ProjectDir)Libs\glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(ProjectDir)Assets" "$(TargetDir)Assets" /S /Y /I /E /D</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>複製資源檔至輸出目錄</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug-Benchmark|x64'">
     <ClCompile>
@@ -168,6 +174,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;%(ProjectDir)Libs\glew32.lib;%(ProjectDir)Libs\glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(ProjectDir)Assets" "$(TargetDir)Assets" /S /Y /I /E /D</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>複製資源檔至輸出目錄</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -185,6 +197,12 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(ProjectDir)Assets" "$(TargetDir)Assets" /S /Y /I /E /D</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>複製資源檔至輸出目錄</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
@@ -210,10 +228,12 @@
     <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Shaders\default.vert" />
+    <Text Include="Assets\Shaders\default.vert" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\default.frag" />
+    <Text Include="Assets\Shaders\default.frag">
+      <FileType>Document</FileType>
+    </Text>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
