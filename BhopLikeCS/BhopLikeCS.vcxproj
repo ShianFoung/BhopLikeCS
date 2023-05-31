@@ -168,6 +168,8 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>%(ProjectDir)Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Header.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -190,6 +192,8 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Header.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -207,6 +211,9 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Config.cpp" />
+    <ClCompile Include="Graphics\Memory\ElementBuffer.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Header.h</PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Header.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -214,18 +221,32 @@
       </PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Graphics\Memory\VertexBuffer.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Header.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Graphics\Memory\VertexArray.cpp">
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Header.h</PrecompiledHeaderFile>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Config.h" />
+    <ClInclude Include="Graphics\Memory\ElementBuffer.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Graphics\Data\Vertex.h" />
     <ClInclude Include="Header.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="Graphics\Memory\VertexBuffer.h" />
+    <ClInclude Include="Graphics\Memory\VertexArray.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\Shaders\default.vert" />

@@ -8,7 +8,7 @@ public:
     Config(const Config& config) = delete;
     Config& operator=(const Config& config) = delete;
 
-    void Initialization();
+    void Init();
     json& Data();
     bool Save();
 private:

@@ -10,7 +10,7 @@ Config& Config::GetInstance()
     return staticInstance;
 }
 
-void Config::Initialization()
+void Config::Init()
 {
     this->isInitialized = true;
     std::ifstream configFile(FILE_NAME);

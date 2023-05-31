@@ -1,26 +1,20 @@
 #pragma once
 
-#include "Header.h"
-
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <vector>
-
 class Shader
 {
 public:
-    Shader(const char* name);
-    ~Shader();
+    Shader(const char* shaderFileName);
 
     void Use();
+    void UnUse();
+    void Delete();
+
     void SetCameraUniform(const float* value);
 private:
-    GLuint _vertID;
-    GLuint _fragID;
-    GLuint _programID;
+    GLuint shaderProgram;
 
-    GLint _cameraMatrixLocation;
+    GLint cameraMatrixLocation;
 
-    GLuint _loadShader(const char* fileName, GLenum shaderType);
+    GLuint loadShader(const char* filePath, GLenum shaderType);
+    GLint getUniformLocation(const char* uniformName);
 };

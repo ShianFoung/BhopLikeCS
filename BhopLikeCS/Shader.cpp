@@ -1,79 +1,66 @@
-
 #include "Header.h"
+
 #include "Shader.h"
 
-Shader::Shader(const char* name)
+std::string getFileContents(const char* filePath)
 {
-    const std::string vertPath = "Assets/Shaders/" + std::string(name) + ".vert";
-    const std::string fragPath = "Assets/Shaders/" + std::string(name) + ".frag";
+    std::ifstream shaderFileStream(filePath, std::ios::binary);
 
-    this->_vertID = this->_loadShader(vertPath.c_str(), GL_VERTEX_SHADER);
-    this->_fragID = this->_loadShader(fragPath.c_str(), GL_FRAGMENT_SHADER);
-
-    this->_programID = glCreateProgram();
-
-    glAttachShader(this->_programID, this->_vertID);
-    glAttachShader(this->_programID, this->_fragID);
-    glLinkProgram(this->_programID);
-
-    GLint isLinked;
-
-    glGetProgramiv(this->_programID, GL_LINK_STATUS, &isLinked);
-
-    if (!isLinked)
+    if (!shaderFileStream.is_open())
     {
-        GLint logLength;
-        glGetShaderiv(this->_programID, GL_INFO_LOG_LENGTH, &logLength);
-
-        std::vector<GLchar> logMessage = std::vector<GLchar>(logLength);
-        glGetShaderInfoLog(this->_programID, logLength, &logLength, logMessage.data());
-
-        std::cerr << logMessage.data() << std::endl;
-
-        this->_programID = 0;
-
-        return;
+        std::string errorMessage = std::format("Cannot Open Shader File ({}).", filePath);
+        std::cerr << errorMessage << std::endl;
+        throw std::exception(errorMessage.c_str());
     }
 
-    this->_cameraMatrixLocation = glGetUniformLocation(this->_programID, "cameraMatrix");
+    std::string contents;
+
+    shaderFileStream.seekg(0, std::ios::end);
+    contents.resize(shaderFileStream.tellg());
+    shaderFileStream.seekg(0, std::ios::beg);
+    shaderFileStream.read(&contents[0], contents.size());
+    shaderFileStream.close();
+
+    return contents;
 }
 
-Shader::~Shader()
+Shader::Shader(const char* shaderFileName)
 {
-    glDetachShader(this->_programID, this->_vertID);
-    glDetachShader(this->_programID, this->_fragID);
-    glDeleteProgram(this->_programID);
-    glDeleteShader(this->_vertID);
-    glDeleteShader(this->_fragID);
+    const std::string vertPath = std::format("Assets/Shaders/{}.vert", shaderFileName);
+    const std::string fragPath = std::format("Assets/Shaders/{}.frag", shaderFileName);
+
+    GLuint vertexShader = this->loadShader(vertPath.c_str(), GL_VERTEX_SHADER);
+    GLuint fragmentShader = this->loadShader(fragPath.c_str(), GL_FRAGMENT_SHADER);
+    this->shaderProgram = glCreateProgram();
+
+    glAttachShader(this->shaderProgram, vertexShader);
+    glAttachShader(this->shaderProgram, fragmentShader);
+    glLinkProgram(this->shaderProgram);
+
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
 }
 
 void Shader::Use()
 {
-    glUseProgram(this->_programID);
+    glUseProgram(this->shaderProgram);
 }
 
-void Shader::SetCameraUniform(const float* value)
+void Shader::Delete()
 {
-    glUniformMatrix4fv(this->_cameraMatrixLocation, 1, GL_FALSE, value);
+    glDeleteProgram(this->shaderProgram);
 }
 
-GLuint Shader::_loadShader(const char* fileName, GLenum shaderType)
+GLuint Shader::loadShader(const char* filePath, GLenum shaderType)
 {
-    // 先讀取 .vert 或 .frag 檔案的內容
-    std::ifstream fileIn(fileName);
-    std::stringstream buffer;
-    buffer << fileIn.rdbuf();
-
-    const std::string bufferString = buffer.str();
-    const char* shaderSourceCode = bufferString.c_str();
+    std::string fileContents = getFileContents(filePath);
+    const char* shaderCode = fileContents.c_str();
     const GLuint shaderID = glCreateShader(shaderType);
 
-    // 將讀取的程式碼進行編譯
-    glShaderSource(shaderID, 1, &shaderSourceCode, 0);
+    glShaderSource(shaderID, 1, &shaderCode, NULL);
     glCompileShader(shaderID);
 
     GLint isSuccess;
-
     glGetShaderiv(shaderID, GL_COMPILE_STATUS, &isSuccess);
 
     if (!isSuccess)
@@ -81,11 +68,10 @@ GLuint Shader::_loadShader(const char* fileName, GLenum shaderType)
         GLint logLength;
         glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &logLength);
 
-        std::vector<GLchar> logMessage = std::vector<GLchar>(logLength);
+        std::vector<char> logMessage(logLength);
         glGetShaderInfoLog(shaderID, logLength, &logLength, logMessage.data());
 
         std::cerr << logMessage.data() << std::endl;
-
         return 0;
     }
 

@@ -25,6 +25,8 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <unordered_map>
+#include <stdexcept>
 
 // Glm 函式庫
 #include <glm/glm.hpp>
@@ -49,21 +51,21 @@ using json = nlohmann::json;
 // ============================================
 
 // 視窗寬度 (等同遊戲解析度的寬)
-static int g_WindowWidth;
+extern int g_WindowWidth;
 // 視窗高度 (等同遊戲解析度的高)
-static int g_WindowHeight;
+extern int g_WindowHeight;
 // 視窗是否全螢幕
-static bool g_WindowFullscrean;
+extern bool g_WindowFullscrean;
 // 解析度的比值 (寬除以高)
-static float g_ResolutionAspectRatio;
+extern float g_ResolutionAspectRatio;
 // 視窗寬度的一半
-static int g_WindowHalfWidth;
+extern int g_WindowHalfWidth;
 // 視窗寬度的一半 (浮點數)
-static float g_WindowHalfWidthFloat;
+extern float g_WindowHalfWidthFloat;
 // 視窗高度的一半
-static int g_WindowHalfHeight;
+extern int g_WindowHalfHeight;
 // 視窗高度的一半 (浮點數)
-static float g_WindowHalfHeightFloat;
+extern float g_WindowHalfHeightFloat;
 
 // ============================================
 //                   功能函式

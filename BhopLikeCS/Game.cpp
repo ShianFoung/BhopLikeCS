@@ -1,56 +1,39 @@
-
 #include "Header.h"
 
 #include "Game.h"
+#include "Player.h"
+#include "Physics.h"
+#include "Shader.h"
 
-Game::Game(const char* title, const int windowWidth, const int windowHeight, bool isFullScrean)
+Game::Game(const char* title, const int windowWidth, const int windowHeight, bool fullscreen)
 {
-    this->_title = title;
-    this->_windowWidth = windowWidth;
-    this->_windowHeight = windowHeight;
-    this->_isFullScrean = isFullScrean;
+    this->title = title;
+    this->windowWidth = windowWidth;
+    this->windowHeight = windowHeight;
+    this->fullscreen = fullscreen;
 
-    this->_createGLWindow();
+    this->createOpenGLWindow();
 }
 
 Game::~Game()
 {
-    this->_window = nullptr;
+    this->window = nullptr;
 }
 
 void Game::Run(int tickrate)
 {
-    Player player = Player(90.0f, this->_windowWidth, this->_windowHeight);
-    Physics physics = Physics(&player);
+    if (this->window == nullptr)
+        return;
 
-    /*GLfloat vertices[] =
+    float vertices[] =
     {
-        -0.5f, 0.0f,  0.5f,
-        -0.5f, 0.0f, -0.5f,
-         0.5f, 0.0f, -0.5f,
-         0.5f, 0.0f,  0.5f,
-         0.0f, 0.8f,  0.0f,
-    };
-
-    GLuint indices[] =
-    {
-        0, 1, 2,
-        0, 2, 3,
-        0, 1, 4,
-        1, 2, 4,
-        2, 3, 4,
-        3, 0, 4
-    };*/
-
-    GLfloat vertices[] =
-    {
-        -100.0f,  100.0f, 0.0f,
-        -100.0f, -100.0f, 0.0f,
+        -100.0f,   100.0f, 0.0f,
+        -100.0f,  -100.0f, 0.0f,
          1000.0f, -100.0f, 0.0f,
          1000.0f,  100.0f, 0.0f
     };
 
-    GLuint indices[] =
+    int indices[] =
     {
         0, 1, 2,
         0, 2, 3
@@ -58,36 +41,37 @@ void Game::Run(int tickrate)
 
     GLuint vao, vbo, ebo;
 
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-    glGenBuffers(1, &vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glGenBuffers(1, &ebo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glCreateVertexArrays(1, &vao);
+    glCreateBuffers(1, &vbo);
+    glCreateBuffers(1, &ebo);
 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) 0);
-    glEnableVertexAttribArray(0);
+    glNamedBufferData(vbo, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glNamedBufferData(ebo, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glEnableVertexArrayAttrib(vao, 0);
+    glVertexArrayAttribBinding(vao, 0, 0);
+    glVertexArrayAttribFormat(vao, 0, 3, GL_FLOAT, GL_FALSE, 0);
+
+    glVertexArrayVertexBuffer(vao, 0, vbo, 0, 3 * sizeof(float));
+    glVertexArrayElementBuffer(vao, ebo);
+
+    glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
     Shader shader = Shader("default");
-
-    glfwSetInputMode(this->_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
     // 開啟深度測試，這樣才能讓物體有遠近之分
     // 不然最後畫的東西會在畫面最前面
     glEnable(GL_DEPTH_TEST);
+
+    Player player(90.0f, g_WindowWidth, g_WindowHeight);
+    Physics physics(&player);
 
     double tickPerSeconds = 1.0 / tickrate;
     double currentTime;
     double lastTime = glfwGetTime();
     float deltaTime;
 
-    while (!glfwWindowShouldClose(this->_window))
+    while (!glfwWindowShouldClose(this->window))
     {
         // 限制 fps 與 tickrate 的地方
         currentTime = glfwGetTime();
@@ -101,7 +85,6 @@ void Game::Run(int tickrate)
 #ifdef _BENCHMARK
         double processStartTime = glfwGetTime();
 #endif
-
         // 先行做事件偵測，後再繪製
         glfwPollEvents();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -110,7 +93,7 @@ void Game::Run(int tickrate)
         // 1. 獲取 player 的滑鼠與鍵盤輸入
         // 2. physics 做物理計算 (碰撞、加速度等等)
         // 3. 將 physics 做完的計算再傳給 player 做最後的更新 (位置等等)
-        player.HandleInputs(this->_window, deltaTime);
+        player.HandleInputs(this->window, deltaTime);
         physics.Update(deltaTime);
         player.Update();
 
@@ -118,34 +101,34 @@ void Game::Run(int tickrate)
 
         // TODO
         shader.Use();
-        shader.SetCameraUniform(glm::value_ptr(viewProjectionMatrix));
+        //shader.SetCameraUniform(glm::value_ptr(viewProjectionMatrix));
 
         glBindVertexArray(vao);
         glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
 
-        glfwSwapBuffers(this->_window);
+        glfwSwapBuffers(this->window);
 
 #ifdef _BENCHMARK
-        double processTime = glfwGetTime() - processStartTime;
-        std::cout << processTime << '\r';
+        std::cout << glfwGetTime() - processStartTime << '\r';
 #endif
     }
 
-    glfwDestroyWindow(this->_window);
+    glfwDestroyWindow(this->window);
+
+    glDeleteVertexArrays(1, &vao);
+    glDeleteBuffers(1, &vbo);
+    glDeleteBuffers(1, &ebo);
 }
 
-// ===================================== Private Static =====================================
-
-void Game::_StaticOpenGLErrorCallback(int error, const char* description)
+void Game::init()
 {
-    std::cerr << "OpenGL Error: " << error << "(" << description << ")" << std::endl;
+
 }
 
-// ===================================== Private =====================================
-
-void Game::_createGLWindow()
+void Game::createOpenGLWindow()
 {
-    glfwSetErrorCallback(Game::_StaticOpenGLErrorCallback);
+    // Handle GLFW Errors
+    glfwSetErrorCallback(Game::staticOpenGLErrorCallback);
 
     // 初始化 GLFW
     glfwInit();
@@ -163,46 +146,48 @@ void Game::_createGLWindow()
     const int primaryMonitorWidth = vidMode->width;
     const int primaryMonitorHeight = vidMode->height;
 
-    if (this->_isFullScrean)
+    if (this->fullscreen)
     {
-        this->_window = glfwCreateWindow(primaryMonitorWidth, primaryMonitorHeight, this->_title, monitor, NULL);
-        this->_windowWidth = primaryMonitorWidth;
-        this->_windowHeight = primaryMonitorHeight;
+        this->window = glfwCreateWindow(primaryMonitorWidth, primaryMonitorHeight, this->title, monitor, NULL);
+        this->windowWidth = primaryMonitorWidth;
+        this->windowHeight = primaryMonitorHeight;
     }
     else
-        this->_window = glfwCreateWindow(this->_windowWidth, this->_windowHeight, this->_title, NULL, NULL);
+        this->window = glfwCreateWindow(this->windowWidth, this->windowHeight, this->title, NULL, NULL);
 
-    if (!this->_window)
+    // 視窗建立失敗，直接退出
+    if (this->window == nullptr)
     {
-        std::cout << "Failed to create window." << std::endl;
+        std::cerr << "Failed to create window." << std::endl;
         glfwTerminate();
+        return;
     }
 
     // 如果不是全螢幕就設定視窗為置中
-    if (!this->_isFullScrean)
+    if (!this->fullscreen)
     {
-        int initWindowXPos = (primaryMonitorWidth - this->_windowWidth) / 2;
-        int initWindowYPos = (primaryMonitorHeight - this->_windowHeight) / 2;
+        int initWindowXPos = (primaryMonitorWidth - this->windowWidth) / 2;
+        int initWindowYPos = (primaryMonitorHeight - this->windowHeight) / 2;
 
-        glfwSetWindowPos(this->_window, initWindowXPos, initWindowYPos);
+        glfwSetWindowPos(this->window, initWindowXPos, initWindowYPos);
     }
 
     // 將視窗的執行緒設定成當前執行緒
-    glfwMakeContextCurrent(this->_window);
+    glfwMakeContextCurrent(this->window);
 
     // 關閉垂直同步 (不然輸入延遲會很高)
     glfwSwapInterval(0);
 
     // 如果有支援滑鼠原始輸入，就開啟
     if (glfwRawMouseMotionSupported())
-        glfwSetInputMode(this->_window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+        glfwSetInputMode(this->window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 
     // 初始化 GLEW
     glewExperimental = GL_TRUE;
     glewInit();
 }
 
-void Game::_render()
+void Game::staticOpenGLErrorCallback(int error, const char* description)
 {
-
+    std::cerr << "OpenGL Error: " << error << "(" << description << ")" << std::endl;
 }

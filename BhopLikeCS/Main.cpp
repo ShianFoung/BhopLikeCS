@@ -4,6 +4,15 @@
 
 #include "Game.h"
 
+int g_WindowWidth;
+int g_WindowHeight;
+bool g_WindowFullscrean;
+float g_ResolutionAspectRatio;
+int g_WindowHalfWidth;
+float g_WindowHalfWidthFloat;
+int g_WindowHalfHeight;
+float g_WindowHalfHeightFloat;
+
 void LoadConfig();
 
 // 程式進入點
@@ -50,7 +59,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 void LoadConfig()
 {
 	Config* config = &Config::GetInstance();
-	config->Initialization();
+	config->Init();
 
 	json windowSettings = config->Data()["windowSettings"];
 	g_WindowWidth = windowSettings["width"];

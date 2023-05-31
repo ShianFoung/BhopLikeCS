@@ -39,6 +39,21 @@
     <ClCompile Include="Header.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Memory\VertexBuffer.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Memory\ElementBuffer.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Memory\VertexArray.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -60,6 +75,24 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="Config.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Memory\VertexBuffer.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Data\Vertex.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Memory\ElementBuffer.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Memory\VertexArray.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>
