@@ -6,6 +6,8 @@ class VertexBuffer
 {
 public:
     VertexBuffer(std::vector<Vertex>& vertices);
+    VertexBuffer(std::vector<float>& vertices);
+    VertexBuffer(const float* vertices, int count, int sizePerData);
     VertexBuffer(GLsizei size);
 
     void BindToVAO(GLuint vaoID);
@@ -14,5 +16,5 @@ public:
     void Delete();
 private:
     GLuint id;
-    GLsizei size;
+    GLsizei sizePerData;
 };

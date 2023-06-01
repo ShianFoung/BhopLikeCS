@@ -5,15 +5,17 @@ class Shader
 public:
     Shader(const char* shaderFileName);
 
-    void Use();
-    void UnUse();
+    void Activate();
     void Delete();
 
-    void SetCameraUniform(const float* value);
+    void SetCameraUniform(glm::mat4& cameraMatrix);
+    void SetUniform(const char* uniformName, const void* value);
+protected:
+
 private:
     GLuint shaderProgram;
 
-    GLint cameraMatrixLocation;
+    GLint cameraMatrixUniformLocation;
 
     GLuint loadShader(const char* filePath, GLenum shaderType);
     GLint getUniformLocation(const char* uniformName);

@@ -1,9 +1,13 @@
-#include "Header.h"
+#include "../Header.h"
 
 #include "Game.h"
 #include "Player.h"
 #include "Physics.h"
-#include "Shader.h"
+#include "Graphics/Rendering/Shader.h"
+
+#include "Graphics/Memory/VertexArray.h"
+#include "Graphics/Memory/VertexBuffer.h"
+#include "Graphics/Memory/ElementBuffer.h"
 
 Game::Game(const char* title, const int windowWidth, const int windowHeight, bool fullscreen)
 {
@@ -25,6 +29,20 @@ void Game::Run(int tickrate)
     if (this->window == nullptr)
         return;
 
+    std::vector<float> test
+    {
+        -100.0f,   100.0f, 0.0f,
+        -100.0f,  -100.0f, 0.0f,
+         1000.0f, -100.0f, 0.0f,
+         1000.0f,  100.0f, 0.0f
+    };
+
+    std::vector<int> test2
+    {
+        0, 1, 2,
+        0, 2, 3
+    };
+
     float vertices[] =
     {
         -100.0f,   100.0f, 0.0f,
@@ -39,7 +57,7 @@ void Game::Run(int tickrate)
         0, 2, 3
     };
 
-    GLuint vao, vbo, ebo;
+    /*GLuint vao, vbo, ebo;
 
     glCreateVertexArrays(1, &vao);
     glCreateBuffers(1, &vbo);
@@ -53,7 +71,16 @@ void Game::Run(int tickrate)
     glVertexArrayAttribFormat(vao, 0, 3, GL_FLOAT, GL_FALSE, 0);
 
     glVertexArrayVertexBuffer(vao, 0, vbo, 0, 3 * sizeof(float));
-    glVertexArrayElementBuffer(vao, ebo);
+    glVertexArrayElementBuffer(vao, ebo);*/
+
+    VertexArray vao;
+    /*VertexBuffer vbo(vertices, sizeof(vertices) / sizeof(float), 3 * sizeof(float));
+    ElementBuffer ebo(indices, sizeof(indices) / sizeof(int));*/
+    VertexBuffer vbo(test);
+    ElementBuffer ebo(test2);
+
+    vao.AddAttribute(0, 3, GL_FLOAT, GL_FALSE, 0);
+    vao.BindBuffers(vbo, ebo);
 
     glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
@@ -100,10 +127,10 @@ void Game::Run(int tickrate)
         glm::mat4 viewProjectionMatrix = player.GetCamera().GetProjectionMatrix();
 
         // TODO
-        shader.Use();
-        //shader.SetCameraUniform(glm::value_ptr(viewProjectionMatrix));
+        shader.Activate();
+        shader.SetCameraUniform(viewProjectionMatrix);
 
-        glBindVertexArray(vao);
+        vao.Bind();
         glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(this->window);
@@ -115,9 +142,9 @@ void Game::Run(int tickrate)
 
     glfwDestroyWindow(this->window);
 
-    glDeleteVertexArrays(1, &vao);
-    glDeleteBuffers(1, &vbo);
-    glDeleteBuffers(1, &ebo);
+    vao.Delete();
+    vbo.Delete();
+    ebo.Delete();
 }
 
 void Game::init()

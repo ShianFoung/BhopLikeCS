@@ -11,6 +11,7 @@
 // 結果最後想一想還是算了，有點懶再去分開了 ㄏㄏ。
 // ============================================
 
+#define GLEW_STATIC
 #define STB_IMAGE_STATIC
 #define STBTT_STATIC
 #define STB_IMAGE_IMPLEMENTATION

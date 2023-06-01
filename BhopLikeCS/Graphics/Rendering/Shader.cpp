@@ -1,4 +1,4 @@
-#include "Header.h"
+#include "../Header.h"
 
 #include "Shader.h"
 
@@ -39,9 +39,11 @@ Shader::Shader(const char* shaderFileName)
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
+
+    this->cameraMatrixUniformLocation = this->getUniformLocation("cameraMatrix");
 }
 
-void Shader::Use()
+void Shader::Activate()
 {
     glUseProgram(this->shaderProgram);
 }
@@ -49,6 +51,16 @@ void Shader::Use()
 void Shader::Delete()
 {
     glDeleteProgram(this->shaderProgram);
+}
+
+void Shader::SetCameraUniform(glm::mat4& cameraMatrix)
+{
+    glUniformMatrix4fv(this->cameraMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(cameraMatrix));
+}
+
+void Shader::SetUniform(const char* uniformName, const void* value)
+{
+
 }
 
 GLuint Shader::loadShader(const char* filePath, GLenum shaderType)
@@ -76,4 +88,9 @@ GLuint Shader::loadShader(const char* filePath, GLenum shaderType)
     }
 
     return shaderID;
+}
+
+GLint Shader::getUniformLocation(const char* uniformName)
+{
+    return glGetUniformLocation(this->shaderProgram, uniformName);
 }

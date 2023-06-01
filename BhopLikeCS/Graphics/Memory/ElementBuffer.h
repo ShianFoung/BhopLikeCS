@@ -3,7 +3,8 @@
 class ElementBuffer
 {
 public:
-    ElementBuffer(std::vector<GLuint>& indices);
+    ElementBuffer(std::vector<int>& indices);
+    ElementBuffer(const int* indices, int count);
 
     void BindToVAO(GLuint vaoID);
 

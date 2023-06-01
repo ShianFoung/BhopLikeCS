@@ -1,8 +1,5 @@
 #include "../Header.h"
 
-#include "VertexBuffer.h"
-#include "ElementBuffer.h"
-
 #include "VertexArray.h"
 
 VertexArray::VertexArray()
@@ -17,10 +14,26 @@ void VertexArray::AddAttribute(GLuint attributeIndex, GLuint dataCount, GLenum t
     glVertexArrayAttribFormat(this->id, attributeIndex, dataCount, type, normalized, offset);
 }
 
-void VertexArray::BindToBuffers(VertexBuffer vbo, ElementBuffer ebo)
+void VertexArray::BindBuffer(VertexBuffer& vbo)
+{
+    vbo.BindToVAO(this->id);
+}
+
+
+void VertexArray::BindBuffers(VertexBuffer& vbo, ElementBuffer& ebo)
 {
     vbo.BindToVAO(this->id);
     ebo.BindToVAO(this->id);
+}
+
+void VertexArray::Bind()
+{
+    glBindVertexArray(this->id);
+}
+
+void VertexArray::Unbind()
+{
+    glBindVertexArray(0);
 }
 
 void VertexArray::Delete()

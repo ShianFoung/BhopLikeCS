@@ -1,5 +1,5 @@
 
-#include "Header.h"
+#include "../Header.h"
 #include "Physics.h"
 
 Physics::Physics(Player* player)
