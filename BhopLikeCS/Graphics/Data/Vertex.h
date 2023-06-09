@@ -7,5 +7,15 @@ struct Vertex
     glm::vec3 position;
     glm::vec3 color;
     glm::vec2 textureUV;
-    bool drawTexture = false;
+    int textureID = -1;
+
+    inline constexpr Vertex& operator=(const Vertex& vertex)
+    {
+        this->position = vertex.position;
+        this->color = vertex.color;
+        this->textureUV = vertex.textureUV;
+        this->textureID = vertex.textureID;
+
+        return *this;
+    }
 };

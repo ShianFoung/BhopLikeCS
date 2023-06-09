@@ -90,7 +90,7 @@ void Game::Run(int tickrate)
     // 不然最後畫的東西會在畫面最前面
     glEnable(GL_DEPTH_TEST);
 
-    Player player(90.0f, g_WindowWidth, g_WindowHeight);
+    Player player(90.0f, Config::windowSettings.width, Config::windowSettings.height);
     Physics physics(&player);
 
     double tickPerSeconds = 1.0 / tickrate;

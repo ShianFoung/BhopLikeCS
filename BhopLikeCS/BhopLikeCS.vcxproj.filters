@@ -39,9 +39,6 @@
     <ClCompile Include="Header.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>來源檔案</Filter>
     </ClCompile>
@@ -77,9 +74,6 @@
     <ClInclude Include="Config.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>標頭檔</Filter>
-    </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
@@ -93,6 +87,18 @@
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Memory\VertexArray.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\Settings\WindowSettings.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\Settings\GameSettings.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\IJsonObject.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\Settings\ConsoleSettings.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
   </ItemGroup>

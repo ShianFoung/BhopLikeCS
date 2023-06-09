@@ -38,7 +38,7 @@
 // Json ¨ç¦¡®w
 #include <nlohmann/json.hpp>
 
-using json = nlohmann::json;
+using Json = nlohmann::json;
 
 // STB ¨ç¦¡®w
 #include <stb/stb_image.h>

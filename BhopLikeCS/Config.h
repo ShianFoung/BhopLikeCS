@@ -1,38 +1,22 @@
 #pragma once
 
+#include "Json/Settings/ConsoleSettings.h"
+#include "Json/Settings/WindowSettings.h"
+#include "Json/Settings/GameSettings.h"
+
 class Config
 {
 public:
-	class WindowSettings;
-	class GameSettings;
-public:
+	static ConsoleSettings consoleSettings;
 	static WindowSettings windowSettings;
 	static GameSettings gameSettings;
 
 	static void Init();
-	static bool Save();
+	static void Save();
 private:
-};
+	static const char* FILE_NAME;
 
-//class Config
-//{
-//public:
-//    static Config& GetInstance();
-//
-//    Config(const Config& config) = delete;
-//    Config& operator=(const Config& config) = delete;
-//
-//    void Init();
-//    json& Data();
-//    bool Save();
-//private:
-//    const char* FILE_NAME = "config.json";
-//
-//    static json staticGetDefaultConfig();
-//private:
-//    bool isInitialized = false;
-//    json jsonData;
-//
-//    Config();
-//    ~Config();
-//};
+	static bool isInitialized;
+
+	Config() = delete;
+};
