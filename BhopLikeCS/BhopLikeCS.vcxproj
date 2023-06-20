@@ -134,65 +134,148 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Config.cpp">
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug-Benchmark|x64'">../Header.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Header.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../Header.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <ClCompile Include="Graphics\Memory\ElementBuffer.cpp">
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Header.h</PrecompiledHeaderFile>
-    </ClCompile>
+    <ClCompile Include="Config.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Graphics\Memory\ElementBuffer.cpp" />
+    <ClCompile Include="Graphics\Memory\VertexArray.cpp" />
+    <ClCompile Include="Graphics\Memory\VertexBuffer.cpp" />
+    <ClCompile Include="Graphics\Rendering\Shader.cpp" />
     <ClCompile Include="Header.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug-Benchmark|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug-Benchmark|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="Includes\imgui\imgui.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug-Benchmark|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug-Benchmark|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Includes\imgui\imgui_demo.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug-Benchmark|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug-Benchmark|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Includes\imgui\imgui_draw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug-Benchmark|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug-Benchmark|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Includes\imgui\imgui_impl_glfw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug-Benchmark|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug-Benchmark|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Includes\imgui\imgui_impl_opengl3.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug-Benchmark|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug-Benchmark|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Includes\imgui\imgui_tables.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug-Benchmark|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug-Benchmark|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Includes\imgui\imgui_widgets.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug-Benchmark|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug-Benchmark|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Map\Map.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Graphics\Rendering\Shader.cpp">
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Header.h</PrecompiledHeaderFile>
-    </ClCompile>
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Graphics\Memory\VertexBuffer.cpp">
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Header.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <ClCompile Include="Graphics\Memory\VertexArray.cpp">
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../Header.h</PrecompiledHeaderFile>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Config.h" />
+    <ClInclude Include="Data\BoundingBox.h" />
     <ClInclude Include="Graphics\Memory\ElementBuffer.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Graphics\Data\Vertex.h" />
     <ClInclude Include="Header.h" />
+    <ClInclude Include="Includes\imgui\imconfig.h" />
+    <ClInclude Include="Includes\imgui\imgui.h" />
+    <ClInclude Include="Includes\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="Includes\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="Includes\imgui\imgui_internal.h" />
+    <ClInclude Include="Includes\imgui\imstb_rectpack.h" />
+    <ClInclude Include="Includes\imgui\imstb_textedit.h" />
+    <ClInclude Include="Includes\imgui\imstb_truetype.h" />
+    <ClInclude Include="Json\MapData\MapJsonObject.h" />
+    <ClInclude Include="Json\MapData\MapJsonTextureUV.h" />
+    <ClInclude Include="Json\Settings\ConsoleSettings.h" />
+    <ClInclude Include="Json\Settings\GameSettings.h" />
+    <ClInclude Include="Map\Map.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Graphics\Rendering\Shader.h" />
-    <ClInclude Include="Json\Settings\ConsoleSettings.h" />
-    <ClInclude Include="Json\Settings\GameSettings.h" />
-    <ClInclude Include="Json\IJsonObject.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Graphics\Memory\VertexBuffer.h" />
     <ClInclude Include="Graphics\Memory\VertexArray.h" />
     <ClInclude Include="Json\Settings\WindowSettings.h" />
+    <ClInclude Include="Utils\Math.h" />
+    <ClInclude Include="Utils\Collision.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Assets\Shaders\default.vert" />
+    <Text Include="Assets\Shaders\defaultColor.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\Shaders\default.frag">
       <FileType>Document</FileType>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Shaders\defaultColor.frag" />
+    <None Include="Assets\Shaders\default.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

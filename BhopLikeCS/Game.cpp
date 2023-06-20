@@ -1,16 +1,22 @@
 #include "../Header.h"
 
-#include "Game.h"
-#include "Player.h"
-#include "Physics.h"
-#include "Graphics/Rendering/Shader.h"
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_glfw.h>
+#include <imgui/imgui_impl_opengl3.h>
 
-#include "Graphics/Memory/VertexArray.h"
-#include "Graphics/Memory/VertexBuffer.h"
-#include "Graphics/Memory/ElementBuffer.h"
+#include "Game.h"
+
+Game* game = nullptr;
+
+void openGLErrorCallback(int error, const char* description)
+{
+    std::cout << "OpenGL Error: " << error << "(" << description << ")\n";
+}
 
 Game::Game(const char* title, const int windowWidth, const int windowHeight, bool fullscreen)
 {
+    game = this;
+
     this->title = title;
     this->windowWidth = windowWidth;
     this->windowHeight = windowHeight;
@@ -29,82 +35,59 @@ void Game::Run(int tickrate)
     if (this->window == nullptr)
         return;
 
-    std::vector<float> test
-    {
-        -100.0f,   100.0f, 0.0f,
-        -100.0f,  -100.0f, 0.0f,
-         1000.0f, -100.0f, 0.0f,
-         1000.0f,  100.0f, 0.0f
-    };
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(this->window, true);
+    ImGui_ImplOpenGL3_Init("#version 460");
+    io.FontGlobalScale = 2.0f;
 
-    std::vector<int> test2
-    {
-        0, 1, 2,
-        0, 2, 3
-    };
+    Map map(Config::gameSettings.map);
 
-    float vertices[] =
-    {
-        -100.0f,   100.0f, 0.0f,
-        -100.0f,  -100.0f, 0.0f,
-         1000.0f, -100.0f, 0.0f,
-         1000.0f,  100.0f, 0.0f
-    };
+    std::vector<BoundingBox> boundingBox;
+    std::vector<std::vector<Vertex>> orderedVertices;
+    std::vector<Texture> textures;
+    std::vector<VertexBuffer> vbos;
 
-    int indices[] =
-    {
-        0, 1, 2,
-        0, 2, 3
-    };
-
-    /*GLuint vao, vbo, ebo;
-
-    glCreateVertexArrays(1, &vao);
-    glCreateBuffers(1, &vbo);
-    glCreateBuffers(1, &ebo);
-
-    glNamedBufferData(vbo, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glNamedBufferData(ebo, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    glEnableVertexArrayAttrib(vao, 0);
-    glVertexArrayAttribBinding(vao, 0, 0);
-    glVertexArrayAttribFormat(vao, 0, 3, GL_FLOAT, GL_FALSE, 0);
-
-    glVertexArrayVertexBuffer(vao, 0, vbo, 0, 3 * sizeof(float));
-    glVertexArrayElementBuffer(vao, ebo);*/
+    map.Generate(boundingBox, orderedVertices, textures, vbos); 
 
     VertexArray vao;
-    /*VertexBuffer vbo(vertices, sizeof(vertices) / sizeof(float), 3 * sizeof(float));
-    ElementBuffer ebo(indices, sizeof(indices) / sizeof(int));*/
-    VertexBuffer vbo(test);
-    ElementBuffer ebo(test2);
+    vao.AddAttribute(0, 3, GL_FLOAT, 0);
+    vao.AddAttribute(1, 3, GL_FLOAT, 3 * sizeof(float));
+    vao.AddAttribute(2, 3, GL_FLOAT, 6 * sizeof(float));
+    vao.Bind();
 
-    vao.AddAttribute(0, 3, GL_FLOAT, GL_FALSE, 0);
-    vao.BindBuffers(vbo, ebo);
+    glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    Shader colorShader = Shader("defaultColor");
+    Shader defaultShader = Shader("default");
 
-    Shader shader = Shader("default");
+    defaultShader.SetUniform1i("textureImage", 0);
 
     // 開啟深度測試，這樣才能讓物體有遠近之分
     // 不然最後畫的東西會在畫面最前面
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
+    glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
 
     Player player(90.0f, Config::windowSettings.width, Config::windowSettings.height);
-    Physics physics(&player);
+    Physics physics(player, boundingBox);
 
     double tickPerSeconds = 1.0 / tickrate;
     double currentTime;
     double lastTime = glfwGetTime();
-    float deltaTime;
+    float frameTime;
 
     while (!glfwWindowShouldClose(this->window))
     {
         // 限制 fps 與 tickrate 的地方
         currentTime = glfwGetTime();
-        deltaTime = static_cast<float>(currentTime - lastTime);
+        frameTime = static_cast<float>(currentTime - lastTime);
 
-        if (deltaTime < tickPerSeconds)
+        if (frameTime < tickPerSeconds)
             continue;
 
         lastTime = currentTime;
@@ -116,22 +99,51 @@ void Game::Run(int tickrate)
         glfwPollEvents();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
         // 處理順序:
         // 1. 獲取 player 的滑鼠與鍵盤輸入
         // 2. physics 做物理計算 (碰撞、加速度等等)
         // 3. 將 physics 做完的計算再傳給 player 做最後的更新 (位置等等)
-        player.HandleInputs(this->window, deltaTime);
-        physics.Update(deltaTime);
-        player.Update();
+        player.HandleInputs(this->window, frameTime);
+        physics.Update(frameTime);
+        player.Update(frameTime);
 
-        glm::mat4 viewProjectionMatrix = player.GetCamera().GetProjectionMatrix();
+        glm::mat4 cameraMatrix = player.GetCamera().GetProjectionMatrix();
 
-        // TODO
-        shader.Activate();
-        shader.SetCameraUniform(viewProjectionMatrix);
+        glEnable(GL_DEPTH_TEST);
+        colorShader.Activate();
+        colorShader.SetCameraUniform(cameraMatrix);
+        defaultShader.Activate();
+        defaultShader.SetCameraUniform(cameraMatrix);
 
-        vao.Bind();
-        glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
+        for (int i = 0; i < vbos.size(); i++)
+        {
+            if (i == 0)
+                colorShader.Activate();
+            else
+            {
+                defaultShader.Activate();
+
+                textures[i - 1].Activate(0);
+            }
+
+            if (orderedVertices[i].size() == 0)
+                continue;
+
+            vao.BindBuffer(vbos[i]);
+            glDrawArrays(GL_TRIANGLES, 0, orderedVertices[i].size());
+        }
+
+        ImGui::SetNextWindowSize(ImVec2(200, 100));
+        ImGui::Begin("Speed", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+        ImGui::Text(std::to_string(static_cast<int>(utils::GetXYVectorLength(player.GetVelocity()))).c_str());
+        ImGui::End();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(this->window);
 
@@ -140,22 +152,20 @@ void Game::Run(int tickrate)
 #endif
     }
 
-    glfwDestroyWindow(this->window);
+    glfwTerminate();
 
     vao.Delete();
-    vbo.Delete();
-    ebo.Delete();
-}
+    for (VertexBuffer& vbo : vbos)
+        vbo.Delete();
 
-void Game::init()
-{
-
+    for (Texture& texture : textures)
+        texture.Delete();
 }
 
 void Game::createOpenGLWindow()
 {
     // Handle GLFW Errors
-    glfwSetErrorCallback(Game::staticOpenGLErrorCallback);
+    glfwSetErrorCallback(openGLErrorCallback);
 
     // 初始化 GLFW
     glfwInit();
@@ -185,7 +195,7 @@ void Game::createOpenGLWindow()
     // 視窗建立失敗，直接退出
     if (this->window == nullptr)
     {
-        std::cerr << "Failed to create window." << std::endl;
+        std::cout << "Failed to create window." << std::endl;
         glfwTerminate();
         return;
     }
@@ -212,9 +222,4 @@ void Game::createOpenGLWindow()
     // 初始化 GLEW
     glewExperimental = GL_TRUE;
     glewInit();
-}
-
-void Game::staticOpenGLErrorCallback(int error, const char* description)
-{
-    std::cerr << "OpenGL Error: " << error << "(" << description << ")" << std::endl;
 }

@@ -1,26 +1,26 @@
 #pragma once
 
-#include "../Json/IJsonObject.h"
+#include "../Header.h"
 
-struct WindowSettings final : IJsonObject
+struct WindowSettings
 {
 	bool fullscreen = false;
 	int width = 1280;
 	int height = 720;
 
-	inline virtual void ToJson(Json& json) override
-	{
-		MEMBER_TO_JSON(fullscreen);
-		MEMBER_TO_JSON(width);
-		MEMBER_TO_JSON(height);
-	}
+    friend void from_json(const Json& json, WindowSettings& object)
+    {
+        WindowSettings defaultObject;
 
-	inline virtual void FromJson(Json& json) override
-	{
-		IF_JSON_NULL_CREATE_DEFAULT_VALUE;
+        FROM_JSON_WITH_DEFAULT(fullscreen);
+        FROM_JSON_WITH_DEFAULT(width);
+        FROM_JSON_WITH_DEFAULT(height);
+    }
 
-		MEMBER_FROM_JSON(fullscreen);
-		MEMBER_FROM_JSON(width);
-		MEMBER_FROM_JSON(height);
-	}
+    friend void to_json(Json& json, const WindowSettings& object)
+    {
+        TO_JSON(fullscreen);
+        TO_JSON(width);
+        TO_JSON(height);
+    }
 };

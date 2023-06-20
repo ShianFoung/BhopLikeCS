@@ -9,6 +9,8 @@ struct Vertex
     glm::vec2 textureUV;
     int textureID = -1;
 
+    constexpr Vertex() = default;
+
     inline constexpr Vertex& operator=(const Vertex& vertex)
     {
         this->position = vertex.position;

@@ -9,7 +9,7 @@ std::string getFileContents(const char* filePath)
     if (!shaderFileStream.is_open())
     {
         std::string errorMessage = std::format("Cannot Open Shader File ({}).", filePath);
-        std::cerr << errorMessage << std::endl;
+        std::cout << errorMessage << std::endl;
         throw std::exception(errorMessage.c_str());
     }
 
@@ -58,9 +58,9 @@ void Shader::SetCameraUniform(glm::mat4& cameraMatrix)
     glUniformMatrix4fv(this->cameraMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(cameraMatrix));
 }
 
-void Shader::SetUniform(const char* uniformName, const void* value)
+void Shader::SetUniform1i(const char* uniformName, const int value)
 {
-
+    glUniform1i(glGetUniformLocation(this->shaderProgram, uniformName), value);
 }
 
 GLuint Shader::loadShader(const char* filePath, GLenum shaderType)
@@ -83,7 +83,7 @@ GLuint Shader::loadShader(const char* filePath, GLenum shaderType)
         std::vector<char> logMessage(logLength);
         glGetShaderInfoLog(shaderID, logLength, &logLength, logMessage.data());
 
-        std::cerr << logMessage.data() << std::endl;
+        std::cout << logMessage.data() << std::endl;
         return 0;
     }
 

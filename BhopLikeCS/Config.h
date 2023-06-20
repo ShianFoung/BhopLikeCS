@@ -12,11 +12,18 @@ public:
 	static GameSettings gameSettings;
 
 	static void Init();
+	static void Reset();
 	static void Save();
+	static void ResetAndSave();
+	static void Flush();
 private:
 	static const char* FILE_NAME;
 
+	static bool isInitialing;
 	static bool isInitialized;
+	static std::vector<std::string> outputBuffer;
 
 	Config() = delete;
+
+	static void addMessage(const char* message);
 };

@@ -14,28 +14,28 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	// 讀取設定檔
 	Config::Init();
-	// 這邊直接做儲存是因為之後還會增加設定，所以載入 Config 後儲存可以直接把新設定存入。
-	Config::Save();
 
+	// 開 Console 並重導基本輸入輸出
 	if (Config::consoleSettings.openConsole)
 	{
-		// 開 Console 並重導基本輸入輸出
 		AllocConsole();
 
 		FILE* stream;
 		freopen_s(&stream, "CONOUT$", "w", stdout);
-		freopen_s(&stream, "CONOUT$", "w", stderr);
 		freopen_s(&stream, "CONIN$", "r", stdin);
 
 		// 將 Console 左上角的位置設定到 Config 設定的位置
 		HWND consoleWnd = GetConsoleWindow();
 		SetWindowPos(consoleWnd, HWND_TOP, Config::consoleSettings.xPosition, Config::consoleSettings.yPosition, 0, 0, SWP_NOSIZE);
 	}
+
+	// 將 Config 的訊息輸出
+	Config::Flush();
 	
 	// 啟動遊戲
 	// 如果設定成全螢幕執行的話，設定的長寬高將會忽略，直接使用主螢幕的長寬
 	Game game("Bhop Like CS", Config::windowSettings.width, Config::windowSettings.height, Config::windowSettings.fullscreen);
-	// 設定遊戲 fps 與 tickrate 為 128
+	// 設定遊戲 fps 與 tickrate 為一樣的數值
 	// 如果 fps 與 tickrate 不同的話，設計上會困難很多... (我不會做畫面平滑)
 	// 所以就簡單的設定成一樣的數值，方便於製作
 	game.Run(Config::gameSettings.tickrateAndFps);

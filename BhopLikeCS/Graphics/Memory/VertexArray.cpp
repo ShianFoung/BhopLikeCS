@@ -7,11 +7,18 @@ VertexArray::VertexArray()
     glCreateVertexArrays(1, &this->id);
 }
 
-void VertexArray::AddAttribute(GLuint attributeIndex, GLuint dataCount, GLenum type, GLboolean normalized, GLuint offset)
+void VertexArray::AddAttribute(GLuint attributeIndex, GLuint dataCount, GLenum type, GLuint offset)
 {
     glEnableVertexArrayAttrib(this->id, attributeIndex);
     glVertexArrayAttribBinding(this->id, attributeIndex, 0);
-    glVertexArrayAttribFormat(this->id, attributeIndex, dataCount, type, normalized, offset);
+    glVertexArrayAttribFormat(this->id, attributeIndex, dataCount, type, GL_FALSE, offset);
+}
+
+void VertexArray::AddAttributeInt(GLuint attributeIndex, GLuint dataCount, GLenum type, GLuint offset)
+{
+    glEnableVertexArrayAttrib(this->id, attributeIndex);
+    glVertexArrayAttribBinding(this->id, attributeIndex, 0);
+    glVertexArrayAttribIFormat(this->id, attributeIndex, dataCount, type, offset);
 }
 
 void VertexArray::BindBuffer(VertexBuffer& vbo)

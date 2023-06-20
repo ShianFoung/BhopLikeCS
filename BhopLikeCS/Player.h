@@ -1,16 +1,6 @@
 #pragma once
 
-#include "Header.h"
-
 #include "Camera.h"
-
-#define KEY_HANDLE(window, key, buttons, buttonType) \
-	if (glfwGetKey(window, key) == GLFW_PRESS) \
-		buttons |= buttonType; \
-	else \
-		buttons &= ~buttonType;
-
-static float cl_yawspeed = 210.0f;
 
 enum PlayerButtons : int
 {
@@ -24,52 +14,58 @@ enum PlayerButtons : int
     YAWRIGHT = (1 << 7)
 };
 
+enum PlayerStates : int
+{
+    NOCLIPMODE = (1 << 0),
+    ONGROUND = (1 << 1)
+};
+
 class Player
 {
 public:
-	Player(float fov, float windowWidth, float windowHeight);
-	~Player();
+    Player(const float fov, const int windowWidth, const int windowHeight);
 
-	glm::vec3& GetPosition();
-	glm::vec3& GetVelocity();
-	glm::vec3& GetViewAngles();
-	Camera& GetCamera();
-	int GetButtons();
+    Camera& GetCamera();
+    glm::vec3& GetPosition();
+    glm::vec3& GetVelocity();
+    int GetPreviousButtons();
+    int GetButtons();
+    int GetStates();
 
-	void SetPosition(glm::vec3& newPosition);
-	void SetVelocity(glm::vec3& newVelocity);
+    void SetSensitivity(const float sensitivity);
+    void SetPosition(const glm::vec3& position);
+    void SetVelocity(const glm::vec3& velocity);
 
-	bool IsNoclip();
-	bool IsPressedKey(int buttons);
+    void AddStates(int states);
 
-	void ClearVelocity();
+    void RemoveStates(int states);
 
-	void HandleInputs(GLFWwindow* window, float deltaTime);
-	void CreateMove();
-	void Update();
+    bool IsKeyPressed(int button);
+
+    void HandleInputs(GLFWwindow* window, float frameTime);
+    void Update(float frameTime);
 private:
-	Camera _camera;
-	glm::vec3 _lastPosition;
-	glm::vec3 _position;
-	glm::vec3 _velocity;
-	glm::vec3 _lastViewAngles;
-	glm::vec3 _viewAngles;
-	float _windowWidth;
-	float _windowHeight;
-	float _windowCenterX;
-	float _windowCenterY;
+    inline static const float StandingHeight = 72.0f;
+    inline static const float CrouchingHeight = 54.0f;
+    inline static const float StandingEyeLevel = 64.0f;
+    inline static const float CrouchingEyeLevel = 46.0f;
 
-	bool _isNoclip = true;
-	bool _isFirstMove = true;
-	float _sensitivity = 3.0f;
-	int _lastButtons = 0;
-	int _buttons = 0;
+    const float windowHalfWidth;
+    const float windowHalfHeight;
 
-	void _keyInput(GLFWwindow* window);
-	void _mouseInput(GLFWwindow* window, float deltaTime);
+    Camera camera;
+
+    glm::vec3 position;
+    glm::vec3 velocity;
+
+    bool isFirstMove;
+    float sensitivity;
+    int previousButtons;
+    int buttons;
+    int states;
+
+    void keyInput(GLFWwindow* window);
+    void mouseInput(GLFWwindow* window, float frameTime);
+
+    inline void setButton(GLFWwindow* window, int key, PlayerButtons button);
 };
-
-////    const glm::vec3 _normalBBox = glm::vec3(32.0f, 72.0f, 32.0f);
-////    const glm::vec3 _crouchBBox = glm::vec3(32.0f, 54.0f, 32.0f);
-////    const float normalEyeLevel = 64.0f;
-////    const float crouchEyeLevel = 46.0f;

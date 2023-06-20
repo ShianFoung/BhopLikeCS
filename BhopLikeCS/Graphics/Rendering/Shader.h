@@ -9,7 +9,7 @@ public:
     void Delete();
 
     void SetCameraUniform(glm::mat4& cameraMatrix);
-    void SetUniform(const char* uniformName, const void* value);
+    void SetUniform1i(const char* uniformName, const int value);
 protected:
 
 private:

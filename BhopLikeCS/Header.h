@@ -6,16 +6,17 @@
 // 需要這個東西的原因是要大幅度的降低
 // 整體的編譯時間，不然包含的函式庫超級多，
 // 每次要編譯時花費的時間真的太久了。
-// 這邊同時也包含了全域變數跟一些實用的功能，
-// 其實原本是想要用 Utils 去包這些功能，
-// 結果最後想一想還是算了，有點懶再去分開了 ㄏㄏ。
 // ============================================
+
+#define FROM_JSON_WITH_DEFAULT(name) object.name = json.value(#name, defaultObject.name)
+#define TO_JSON(name) json[#name] = object.name
 
 #define GLEW_STATIC
 #define STB_IMAGE_STATIC
 #define STBTT_STATIC
 #define STB_IMAGE_IMPLEMENTATION
-#define STB_TRUETYPE_IMPLEMENTATION
+
+// ImGui 函式庫
 
 // OpenGL 函式庫，而且要優先導入 glew，不然會報錯
 #include <glew/glew.h>
@@ -38,57 +39,51 @@
 // Json 函式庫
 #include <nlohmann/json.hpp>
 
-using Json = nlohmann::json;
+using Json = nlohmann::ordered_json;
 
 // STB 函式庫
 #include <stb/stb_image.h>
-#include <stb/stb_truetype.h>
 
 // 自己做的 Config 函式庫
 #include "Config.h"
 
-// ============================================
-//                   全域變數
-// ============================================
+#include "Utils/Math.h"
+#include "Utils/Collision.h"
 
-// 視窗寬度 (等同遊戲解析度的寬)
-extern int g_WindowWidth;
-// 視窗高度 (等同遊戲解析度的高)
-extern int g_WindowHeight;
-// 視窗是否全螢幕
-extern bool g_WindowFullscrean;
-// 解析度的比值 (寬除以高)
-extern float g_ResolutionAspectRatio;
-// 視窗寬度的一半
-extern int g_WindowHalfWidth;
-// 視窗寬度的一半 (浮點數)
-extern float g_WindowHalfWidthFloat;
-// 視窗高度的一半
-extern int g_WindowHalfHeight;
-// 視窗高度的一半 (浮點數)
-extern float g_WindowHalfHeightFloat;
-
-// ============================================
-//                   功能函式
-// ============================================
-
-// 取得向量中每個分量的絕對值
-inline glm::vec3 AbsValues(const glm::vec3& vector)
+namespace glm
 {
-    return glm::vec3(abs(vector.x), abs(vector.y), abs(vector.z));
-}
+    inline void to_json(Json& json, const glm::vec2& vector)
+    {
+        json = Json::array({ vector.x, vector.y });
+    }
 
-// 取得水平方向的移動速度
-inline float GetXYVelocity(const glm::vec3& velocity)
-{
-    return sqrt(velocity.x * velocity.x +
-                velocity.y * velocity.y);
-}
+    inline void from_json(const Json& json, glm::vec2& vector)
+    {
+        vector.x = json[0];
+        vector.y = json[1];
+    }
 
-// 取得三維空間的移動速度
-inline float GetXYZVelocity(const glm::vec3& velocity)
-{
-    return sqrt(velocity.x * velocity.x +
-                velocity.y * velocity.y +
-                velocity.z * velocity.z);
+    inline void to_json(Json& json, const glm::vec3& vector)
+    {
+        json = Json::array({ vector.x, vector.y, vector.z });
+    }
+
+    inline void from_json(const Json& json, glm::vec3& vector)
+    {
+        vector.x = json[0];
+        vector.y = json[1];
+        vector.z = json[2];
+    }
+
+    inline void to_json(Json& json, const glm::u8vec3& color)
+    {
+        json = Json::array({ color.r, color.g, color.b });
+    }
+
+    inline void from_json(const Json& json, glm::u8vec3& color)
+    {
+        color.r = json[0];
+        color.g = json[1];
+        color.b = json[2];
+    }
 }

@@ -15,44 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Rendering\Shader.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="Config.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="Header.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Memory\VertexBuffer.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Memory\ElementBuffer.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Memory\VertexArray.cpp">
-      <Filter>來源檔案</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Camera.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
@@ -92,18 +54,123 @@
     <ClInclude Include="Json\Settings\WindowSettings.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="Json\Settings\GameSettings.h">
+    <ClInclude Include="Data\BoundingBox.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
-    <ClInclude Include="Json\IJsonObject.h">
+    <ClInclude Include="Utils\Math.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Collision.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Map\Map.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\MapData\MapJsonObject.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\Settings\GameSettings.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
     <ClInclude Include="Json\Settings\ConsoleSettings.h">
       <Filter>標頭檔</Filter>
     </ClInclude>
+    <ClInclude Include="Json\MapData\MapJsonTextureUV.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\imgui\imconfig.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\imgui\imgui.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\imgui\imgui_impl_glfw.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\imgui\imgui_impl_opengl3.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\imgui\imgui_internal.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\imgui\imstb_rectpack.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\imgui\imstb_textedit.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\imgui\imstb_truetype.h">
+      <Filter>標頭檔</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Assets\Shaders\default.vert" />
+    <Text Include="Assets\Shaders\defaultColor.vert" />
     <Text Include="Assets\Shaders\default.frag" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Camera.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Config.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Header.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Memory\ElementBuffer.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Memory\VertexArray.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Memory\VertexBuffer.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Rendering\Shader.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Map\Map.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Includes\imgui\imgui.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Includes\imgui\imgui_demo.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Includes\imgui\imgui_draw.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Includes\imgui\imgui_impl_glfw.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Includes\imgui\imgui_impl_opengl3.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Includes\imgui\imgui_tables.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+    <ClCompile Include="Includes\imgui\imgui_widgets.cpp">
+      <Filter>來源檔案</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Shaders\defaultColor.frag" />
+    <None Include="Assets\Shaders\default.vert" />
   </ItemGroup>
 </Project>

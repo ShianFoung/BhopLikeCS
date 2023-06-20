@@ -8,7 +8,8 @@ class VertexArray
 public:
     VertexArray();
 
-    void AddAttribute(GLuint attributeIndex, GLuint dataCount, GLenum type, GLboolean normalized, GLuint offset);
+    void AddAttribute(GLuint attributeIndex, GLuint dataCount, GLenum type, GLuint offset);
+    void AddAttributeInt(GLuint attributeIndex, GLuint dataCount, GLenum type, GLuint offset);
     void BindBuffer(VertexBuffer& vbo);
     void BindBuffers(VertexBuffer& vbo, ElementBuffer& ebo);
 

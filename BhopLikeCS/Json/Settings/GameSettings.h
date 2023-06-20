@@ -1,20 +1,23 @@
 #pragma once
 
-#include "../Json/IJsonObject.h"
+#include "../Header.h"
 
-struct GameSettings final : public IJsonObject
+struct GameSettings
 {
 	int tickrateAndFps = 128;
+	std::string map = "bhop_test";
 
-	inline virtual void ToJson(Json& json) override
-	{
-		MEMBER_TO_JSON(tickrateAndFps);
-	}
+    friend void from_json(const Json& json, GameSettings& object)
+    {
+        GameSettings defaultObject;
 
-	inline virtual void FromJson(Json& json) override
-	{
-		IF_JSON_NULL_CREATE_DEFAULT_VALUE;
+        FROM_JSON_WITH_DEFAULT(tickrateAndFps);
+        FROM_JSON_WITH_DEFAULT(map);
+    }
 
-		MEMBER_FROM_JSON(tickrateAndFps);
-	}
+    friend void to_json(Json& json, const GameSettings& object)
+    {
+        TO_JSON(tickrateAndFps);
+        TO_JSON(map);
+    }
 };

@@ -1,61 +1,44 @@
 #pragma once
 
-#include "Header.h"
-
-class Camera
+class Camera final
 {
 public:
     Camera(float fov, float aspectRatio, float near = 7.0f, float far = 28400.0f);
-    ~Camera();
 
+    void GetViewAngles(float* viewAngles);
+    glm::vec3& GetFrontVector();
+    glm::vec3& GetRightVector();
+    glm::vec3& GetUpVector();
     glm::mat4& GetProjectionMatrix();
-    void GetViewSpaceVectors(glm::vec3* front, glm::vec3* right, glm::vec3* up);
-    void GetCameraAngles(float* yaw, float* pitch);
 
-    void SetPosition(glm::vec3& position);
-    void SetPositionOffset(glm::vec3& offset);
-    void SetEulerAngles(float yaw, float pitch);
+    void SetPosition(const glm::vec3& position);
+    void SetViewAngles(const float yaw = 0.0f, const float pitch = 0.0f);
 
-    void AddEulerAngles(float yaw, float pitch);
+    void AddViewAngles(const float yaw = 0.0f, const float pitch = 0.0f);
 
-    /*void Temp(GLFWwindow* window)
-    {
-        float speed = 1.0f;
-
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-            this->_cameraPosition += speed * this->_cameraDirection;
-
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-            this->_cameraPosition -= speed * this->_cameraDirection;
-
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-            this->_cameraPosition -= speed * glm::normalize(glm::cross(this->_cameraDirection, this->_cameraUp));
-
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-            this->_cameraPosition += speed * glm::normalize(glm::cross(this->_cameraDirection, this->_cameraUp));
-
-        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-            this->_cameraPosition += speed * this->_cameraUp;
-
-        if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-            this->_cameraPosition -= speed * this->_cameraUp;
-
-        this->_updateProjectionMatrix();
-    }*/
+    void Update();
 private:
-    float _yaw;
-    float _pitch;
-    glm::vec3 _position;
-    glm::vec3 _direction;
-    glm::vec3 _right;
-    glm::vec3 _up;
-    glm::vec3 _worldUp;
-    glm::vec3 _positionOffset;
-    glm::mat4 _modelViewMatrix;
-    glm::mat4 _projectionMatrix;
-    glm::mat4 _perspectiveMatrix;
+    // 相機水平角度
+    float yaw;
+    // 相機垂直角度
+    float pitch;
 
-    void _updateCameraVectors();
-    void _updateProjectionMatrix();
+    // 相機於世界座標的位置
+    glm::vec3 position;
+    // 相機面向方向
+    glm::vec3 direction;
+    // 相機上方朝向世界座標向量 (此值為固定值)
+    glm::vec3 worldUp;
+    // 相機右方向量
+    glm::vec3 right;
+    // 相機實際上方向量
+    glm::vec3 up;
+
+    // 透視投影矩陣
+    glm::mat4 perspectiveMatrix;
+    // 投影矩陣
+    glm::mat4 projectionMatrix;
+
+    inline void updateVectors();
+    inline void updateProjectionMatrix();
 };
-

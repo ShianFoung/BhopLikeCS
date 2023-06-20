@@ -1,26 +1,26 @@
 #pragma once
 
-#include "../Json/IJsonObject.h"
+#include "../Header.h"
 
-struct ConsoleSettings : public IJsonObject
+struct ConsoleSettings
 {
 	bool openConsole = true;
 	int xPosition = 10;
 	int yPosition = 10;
 
-	inline virtual void ToJson(Json& json) override
-	{
-		MEMBER_TO_JSON(openConsole);
-		MEMBER_TO_JSON(xPosition);
-		MEMBER_TO_JSON(yPosition);
-	}
+    friend void from_json(const Json& json, ConsoleSettings& object)
+    {
+        ConsoleSettings defaultObject;
 
-	inline virtual void FromJson(Json& json) override
-	{
-		IF_JSON_NULL_CREATE_DEFAULT_VALUE;
+        FROM_JSON_WITH_DEFAULT(openConsole);
+        FROM_JSON_WITH_DEFAULT(xPosition);
+        FROM_JSON_WITH_DEFAULT(yPosition);
+    }
 
-		MEMBER_FROM_JSON(openConsole);
-		MEMBER_FROM_JSON(xPosition);
-		MEMBER_FROM_JSON(yPosition);
-	}
+    friend void to_json(Json& json, const ConsoleSettings& object)
+    {
+        TO_JSON(openConsole);
+        TO_JSON(xPosition);
+        TO_JSON(yPosition);
+    }
 };
